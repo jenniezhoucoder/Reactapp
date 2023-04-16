@@ -20,10 +20,22 @@ const login = (username, password) => {
       if (response.data.accessToken) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
-
       return response.data;
     });
 };
+
+// const update = (email) => {
+//   return axios
+//     .post(API_URL + "update", {
+//       email,
+//     })
+//     .then((response) => {
+//       console.log("send successfully");
+//     })
+//     .catch((error) => {
+//       console.log("error");
+//     });
+// };
 
 const logout = () => {
   localStorage.removeItem("user");

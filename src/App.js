@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "./App.css";
+
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
 
 import AuthService from "./services/auth.service";
 
@@ -10,11 +16,10 @@ import Register from "./components/Register/Register";
 import Home from "./components/Home/Home";
 import Profile from "./components/Profile/Profile";
 import BoardUser from "./components/BoardUser/BoardUser";
-// import BoardModerator from "./components/BoardModerator";
 import BoardAdmin from "./components/BoardAdmin/BoardAdmin";
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 
 const App = () => {
-  // const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
 
@@ -23,7 +28,6 @@ const App = () => {
 
     if (user) {
       setCurrentUser(user);
-      // setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
       setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
     }
   }, []);
@@ -34,9 +38,9 @@ const App = () => {
 
   return (
     <div>
-      <nav className="navbar navbar-expand navbar-dark bg-dark">
+      <nav className="navbar navbar-expand-md navbar-dark bg-dark">
         <Link to={"/"} className="navbar-brand">
-          bezKoder
+          Management
         </Link>
         <div className="navbar-nav mr-auto">
           <li className="nav-item">
@@ -44,14 +48,6 @@ const App = () => {
               Home
             </Link>
           </li>
-
-          {/* {showModeratorBoard && (
-            <li className="nav-item">
-              <Link to={"/mod"} className="nav-link">
-                Moderator Board
-              </Link>
-            </li>
-          )} */}
 
           {showAdminBoard && (
             <li className="nav-item">
@@ -70,6 +66,13 @@ const App = () => {
           )}
         </div>
 
+        <InputGroup className="w-50">
+          <Form.Control aria-describedby="basic-addon2" />
+          <Button variant="outline-secondary" id="button-addon2">
+            <i className="bi bi-search"></i>
+          </Button>
+        </InputGroup>
+
         {currentUser ? (
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
@@ -79,7 +82,7 @@ const App = () => {
             </li>
             <li className="nav-item">
               <a href="/login" className="nav-link" onClick={logOut}>
-                LogOut
+                Logout
               </a>
             </li>
           </div>
@@ -87,13 +90,13 @@ const App = () => {
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
               <Link to={"/login"} className="nav-link">
-                Login
+                <i className="bi bi-person"></i>
               </Link>
             </li>
 
             <li className="nav-item">
               <Link to={"/register"} className="nav-link">
-                Sign Up
+                Register
               </Link>
             </li>
           </div>
@@ -108,10 +111,30 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/user" element={<BoardUser />} />
-          {/* <Route path="/mod" element={<BoardModerator />} /> */}
           <Route path="/admin" element={<BoardAdmin />} />
+          <Route path="/update" element={<ForgotPassword />} />
         </Routes>
       </div>
+
+      <footer className="bg-dark text-center text-white">
+        <div className="container pb-0">
+          <section>
+            <a className="btn btn-outline-light btn-floating m-1" role="button">
+              <i className="bi bi-twitter"></i>
+            </a>
+
+            <a className="btn btn-outline-light btn-floating m-1" role="button">
+              <i className="bi bi-facebook"></i>
+            </a>
+
+            <a className="btn btn-outline-light btn-floating m-1" role="button">
+              <i className="bi bi-youtube"></i>
+            </a>
+          </section>
+        </div>
+
+        <div className="text-center p-3">© 2023 Copyright: Reserved</div>
+      </footer>
     </div>
   );
 };
