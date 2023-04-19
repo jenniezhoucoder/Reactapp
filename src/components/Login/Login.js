@@ -119,7 +119,7 @@ const Login = () => {
             <CheckButton style={{ display: "none" }} ref={checkBtn} />
           </Form>
 
-          <Link to={"/update"}>forgot your password?</Link>
+          <Link to={"/updatepassword"}>forgot your password?</Link>
         </Modal>
       </div>
     </div>

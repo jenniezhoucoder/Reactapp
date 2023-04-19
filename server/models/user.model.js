@@ -12,6 +12,10 @@ const User = mongoose.model(
         ref: "Role",
       },
     ],
+    shoppingCart: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+    },
   })
 );
 

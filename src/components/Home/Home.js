@@ -5,6 +5,7 @@ import UserService from "../../services/user.service";
 
 const Home = () => {
   const [content, setContent] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     UserService.getPublicContent().then(
@@ -27,7 +28,7 @@ const Home = () => {
       <header className="jumbotron">
         <h3>{content}</h3>
       </header>
-      <Product />
+      {/* <Product /> */}
     </div>
   );
 };

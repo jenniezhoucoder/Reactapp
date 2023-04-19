@@ -5,6 +5,13 @@ const Role = db.role;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+const { adminBoard } = require("./user.controller");
+
+// additem {
+//   1. check if user is adminBoard
+//   2. const product
+//   3. product.sae
+// }
 
 exports.signup = (req, res) => {
   const user = new User({
@@ -106,3 +113,42 @@ exports.signin = (req, res) => {
       });
     });
 };
+
+// exports.updatePassword = (req, res) => {
+//   const { email } = req.body;
+//   User.findOne({ email }, (error, username) => {
+//     if (error) {
+//       return res.status(500).json({ error: "Server error" });
+//     }
+//     if (!username) {
+//       return res.status(404).json({ error: "Email not found" });
+//     }
+//     return res.status(200).json({ message: "Email found" });
+//   });
+// };
+
+// var passwordIsValid = bcrypt.compareSync(
+//   req.body.oldPassword,
+//   user.password
+// );
+
+// if (!passwordIsValid) {
+//   return res.status(401).send({
+//     message: "Invalid Old Password!",
+//   });
+// }
+
+//     user.password = bcrypt.hashSync(req.body.newPassword, 8);
+
+//     user.save((err) => {
+//       if (err) {
+//         res.status(500).send({ message: err });
+//         return;
+//       }
+
+//       res.status(200).send({ message: "Password was updated successfully!" });
+//     });
+//   });
+// };
+
+// update pwd

@@ -17,7 +17,6 @@ const BoardAdmin = () => {
             error.response.data.message) ||
           error.message ||
           error.toString();
-
         setContent(_content);
       }
     );

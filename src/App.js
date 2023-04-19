@@ -18,6 +18,9 @@ import Profile from "./components/Profile/Profile";
 import BoardUser from "./components/BoardUser/BoardUser";
 import BoardAdmin from "./components/BoardAdmin/BoardAdmin";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
+import CreateProduct from "./components/Product/CreateProduct";
+import ProductDetail from "./components/Product/ProductDetail";
+import EditProduct from "./components/Product/EditProduct";
 
 const App = () => {
   const [showAdminBoard, setShowAdminBoard] = useState(false);
@@ -112,13 +115,16 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/user" element={<BoardUser />} />
           <Route path="/admin" element={<BoardAdmin />} />
-          <Route path="/update" element={<ForgotPassword />} />
+          <Route path="/updatepassword" element={<ForgotPassword />} />
+          <Route path="/addproduct" element={<CreateProduct />} />
+          <Route path="/user/:id" element={<ProductDetail />} />
+          <Route path="/editproduct/:id" element={<EditProduct />} />
         </Routes>
       </div>
 
       <footer className="bg-dark text-center text-white">
-        <div className="container pb-0">
-          <section>
+        <div className="container flex justify-content-between">
+          <section className="p-2">
             <a className="btn btn-outline-light btn-floating m-1" role="button">
               <i className="bi bi-twitter"></i>
             </a>
@@ -131,9 +137,8 @@ const App = () => {
               <i className="bi bi-youtube"></i>
             </a>
           </section>
+          <div className="text-center p-2">© 2023 Copyright: Reserved</div>
         </div>
-
-        <div className="text-center p-3">© 2023 Copyright: Reserved</div>
       </footer>
     </div>
   );

@@ -6,8 +6,7 @@ import CheckButton from "react-validation/build/button";
 import Modal from "../../common/modal";
 import { FORM } from "../../constants";
 import { isEmail } from "validator";
-
-// import AuthService from "../../services/auth.service";
+import AuthService from "../../services/auth.service";
 
 const required = (value) => {
   if (!value) {
@@ -32,20 +31,34 @@ const validEmail = (value) => {
 const ForgotPassword = () => {
   //   let navigate = useNavigate();
 
+  // const [email, setEmail] = useState("");
+  // const [message, setMessage] = useState("");
+
   const form = useRef();
   const checkBtn = useRef();
 
   const [email, setEmail] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [status, setStatus] = useState(null);
 
   const onChangeEmail = (e) => {
     const email = e.target.value;
     setEmail(email);
   };
 
-  const handleUpdate = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    form.current.validateAll();
+    if (checkBtn.current.context._errors.length === 0) {
+      setStatus("success");
+    } else {
+      setStatus("error");
+    }
+
+    // try {
+    //   const response = await axios.post("/api/auth/updatepassword", { email });
+    //   setMessage(response.data.message);
+    // } catch (error) {
+    //   setMessage(error.response.data.error);
+    // }
   };
 
   return (
@@ -71,15 +84,23 @@ const ForgotPassword = () => {
             <div className="form-group">
               <button
                 className="btn btn-primary btn-block"
-                onClick={() => setShowPassword(true)}
+                // onClick={() => setShowPassword(true)}
+                type="submit"
               >
                 {FORM.UPDATE_PASS_BUTTON}
               </button>
             </div>
 
-            {showPassword && <UpdateContent />}
-
+            {/* {showPassword && <UpdateContent />} */}
             <CheckButton style={{ display: "none" }} ref={checkBtn} />
+
+            {status === "success" && (
+              <p>
+                We have sent the update password link to your emial, please
+                check that ！
+              </p>
+            )}
+            {status === "error" && <p>Password reset failed.</p>}
           </Form>
         </Modal>
       </div>
@@ -87,12 +108,12 @@ const ForgotPassword = () => {
   );
 };
 
-const UpdateContent = () => {
-  return (
-    <>
-      <p>send email successfully</p>
-    </>
-  );
-};
+// const UpdateContent = () => {
+//   return (
+//     <>
+//       <p>send email successfully</p>
+//     </>
+//   );
+// };
 
 export default ForgotPassword;

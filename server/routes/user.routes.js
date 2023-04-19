@@ -1,5 +1,7 @@
 const { authJwt } = require("../middlewares");
 const controller = require("../controllers/user.controller");
+// const db = require("../models");
+// const Product = db.product;
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -19,4 +21,10 @@ module.exports = function (app) {
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminBoard
   );
+
+  //add product
+  // app.post("api/test/createproduct", userController.addProduct);
+
+  //show product
+  // app.get("api/test/product", controller.showProduct);
 };

@@ -1,3 +1,5 @@
+// const db = require("../models");
+
 exports.allAccess = (req, res) => {
   res.status(200).send("Public Content.");
 };
@@ -10,6 +12,16 @@ exports.adminBoard = (req, res) => {
   res.status(200).send("Admin Content.");
 };
 
-// exports.moderatorBoard = (req, res) => {
-//   res.status(200).send("Moderator Content.");
-// };
+/*
+
+// Cusomter
+// addItemToShoppingcart() it will be triggered when click "add item"
+
+// getTotalPrice() onchange shoppingcart
+// getAllProducts*()
+
+//Admin
+// addProduct() -> it will add product to db
+// removeProduct(ProductId)  remove from db
+
+*/

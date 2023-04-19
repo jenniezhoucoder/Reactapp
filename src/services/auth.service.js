@@ -24,17 +24,19 @@ const login = (username, password) => {
     });
 };
 
-// const update = (email) => {
+// const updatepassword = (email) => {
 //   return axios
-//     .post(API_URL + "update", {
+//     .post(API_URL + "updatepassword", {
 //       email,
 //     })
 //     .then((response) => {
-//       console.log("send successfully");
-//     })
-//     .catch((error) => {
-//       console.log("error");
+//       return response.data;
 //     });
+// };
+
+// const updatepassword = (email) => {
+//update password by email
+//console.log("update password syccessfully");
 // };
 
 const logout = () => {
@@ -48,6 +50,7 @@ const getCurrentUser = () => {
 const AuthService = {
   register,
   login,
+  // updatepassword,
   logout,
   getCurrentUser,
 };
