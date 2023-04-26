@@ -8,6 +8,7 @@ import "./App.css";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
+import { Modal } from "react-bootstrap";
 
 import AuthService from "./services/auth.service";
 
@@ -21,6 +22,8 @@ import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import CreateProduct from "./components/Product/CreateProduct";
 import ProductDetail from "./components/Product/ProductDetail";
 import EditProduct from "./components/Product/EditProduct";
+import ShoppingCart from "./components/Cart/ShoppingCart";
+import { useNavigate } from "react-router-dom";
 
 const App = () => {
   const [showAdminBoard, setShowAdminBoard] = useState(false);
@@ -38,6 +41,8 @@ const App = () => {
   const logOut = () => {
     AuthService.logout();
   };
+
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -88,6 +93,12 @@ const App = () => {
                 Logout
               </a>
             </li>
+            <Button
+              variant="link"
+              onClick={() => navigate(`/cart/${currentUser.id}`)}
+            >
+              <i className="bi bi-cart"></i>
+            </Button>
           </div>
         ) : (
           <div className="navbar-nav ml-auto">
@@ -119,6 +130,7 @@ const App = () => {
           <Route path="/addproduct" element={<CreateProduct />} />
           <Route path="/user/:id" element={<ProductDetail />} />
           <Route path="/editproduct/:id" element={<EditProduct />} />
+          <Route path="/cart/:userId" element={<ShoppingCart />} />
         </Routes>
       </div>
 

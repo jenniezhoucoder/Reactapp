@@ -28,6 +28,7 @@ exports.editProduct = async (req, res) => {
     const productUUID = req.params.id;
     const updates = req.body;
     const options = { new: true }; // Return the updated document
+
     const updatedProduct = await Product.findOneAndUpdate(
       { id: productUUID },
       updates,
@@ -39,52 +40,6 @@ exports.editProduct = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-
-// exports.editProduct = async (req, res) => {
-//   try {
-//     const productUUID = req.params.id;
-//     const updates = req.body;
-
-//     // Check if required fields exist
-//     if (
-//       !updates.name ||
-//       !updates.category ||
-//       !updates.price ||
-//       !updates.quantity
-//     ) {
-//       return res.status(400).json({ message: "Missing required fields" });
-//     }
-
-//     // Check if price and quantity are numbers
-//     if (
-//       typeof updates.price !== "number" ||
-//       typeof updates.quantity !== "number"
-//     ) {
-//       return res
-//         .status(400)
-//         .json({ message: "Price and quantity must be numbers" });
-//     }
-
-//     // Check if UUID is valid format
-//     const uuidRegex =
-//       /^[a-f\d]{8}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{12}$/i;
-//     if (!uuidRegex.test(productUUID)) {
-//       return res.status(400).json({ message: "Invalid product UUID" });
-//     }
-
-//     // Update the product
-//     const options = { new: true }; // Return the updated document
-//     const updatedProduct = await Product.findOneAndUpdate(
-//       { id: productUUID },
-//       updates,
-//       options
-//     );
-//     res.send(updatedProduct);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Server Error" });
-//   }
-// };
 
 exports.addProducts = async (req, res) => {
   await body("name").notEmpty().withMessage("Name is required").run(req);
@@ -152,40 +107,3 @@ exports.productDetail = async (req, res) => {
     return res.status(500).send({ message: "Internal server error" });
   }
 };
-
-//   const updatedProduct = await Product.findByIdAndUpdate(
-//     req.params.id,
-//     newProduct,
-//     {
-//       runValidators: true,
-//     }
-//   );
-
-//   res.status(200).json({
-//     status: "success",
-//     data: updatedProduct,
-//   });
-// });
-
-// export const deleteProduct = catchAsync(async (req, res, next) => {
-//   await Product.findByIdAndDelete(req.params.id);
-
-//   res.status(204).json({});
-// });
-
-// export const imagesUpload = catchAsync(async (req, res, next) => {
-//   const imageKit = new ImageKit({
-//     publicKey: "public_BDqyaCrCNBcot/R+VnBaqtaWw8o=",
-//     privateKey: process.env.IMAGE_KIT_PRIVATE_KEY,
-//     urlEndpoint: "https://ik.imagekit.io/beevfgcytiq/",
-//   });
-
-//   const authenticationParameters = imageKit.getAuthenticationParameters();
-//   const { token, expire, signature } = authenticationParameters;
-
-//   res.status(200).json({
-//     token,
-//     expire,
-//     signature,
-//   });
-// });

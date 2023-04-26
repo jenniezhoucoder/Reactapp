@@ -1,5 +1,6 @@
 import Card from "react-bootstrap/Card";
-import { Button } from "react-bootstrap";
+import { Button, ButtonGroup } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -10,7 +11,7 @@ function ProductDetail() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/test/user/${id}`)
+      .get(`http://localhost:8080/api/test/${id}`)
       .then((response) => {
         setProduct(response.data);
       })
@@ -35,8 +36,17 @@ function ProductDetail() {
             <Card.Text>${product.price}</Card.Text>
             <Card.Text>{product.description}</Card.Text>
             <Button variant="primary">Add to cart</Button>
-            <Button variant="light">Edit product</Button>
-            <Card.Text>quantity: {product.quantity}</Card.Text>
+            {/* <ButtonGroup size="sm">
+              <Button variant="secondary">+</Button>
+              <Button variant="secondary">num</Button>
+              <Button variant="secondary">-</Button>
+            </ButtonGroup> */}
+            <Button variant="light">
+              <Link to={`/editproduct/${product.id}`}>Edit product</Link>
+            </Button>
+            <Card.Text style={{ color: "grey" }}>
+              In Stock: {product.quantity}
+            </Card.Text>
           </Card.Body>
         </Card>
       </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Product from "../Product/Product";
+import axios from "axios";
 
 import UserService from "../../services/user.service";
 

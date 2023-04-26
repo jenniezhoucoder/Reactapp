@@ -3,11 +3,6 @@ import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 
 const MyModal = (props) => {
-  // const [show, setShow] = useState(false);
-
-  // const handleClose = () => setShow(false);
-  // const handleShow = () => setShow(true);
-
   const { children, titleText } = props;
 
   return (
@@ -23,7 +18,7 @@ const MyModal = (props) => {
 
       <div
         className="modal show"
-        style={{ display: "block", position: "initial", padding: "10px" }}
+        style={{ display: "block", position: "initial" }}
       >
         <Modal.Dialog>
           <Modal.Header>

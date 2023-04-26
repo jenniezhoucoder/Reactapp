@@ -12,6 +12,16 @@ const Product = mongoose.model(
     price: Number,
     quantity: Number,
     link: String,
+    createdAt: {
+      type: Date,
+      required: true,
+      default: Date.now,
+    },
+    updatedAt: {
+      type: Date,
+      required: true,
+      default: Date.now,
+    },
   })
 );
 

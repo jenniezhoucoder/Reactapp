@@ -51,7 +51,7 @@ const Login = () => {
     if (checkBtn.current.context._errors.length === 0) {
       AuthService.login(username, password).then(
         () => {
-          navigate("/profile");
+          navigate("/user");
           window.location.reload();
         },
         (error) => {
@@ -72,57 +72,62 @@ const Login = () => {
   };
 
   return (
-    <div className="col-md-12">
-      <div className="card card-container">
-        <Modal titleText={FORM.LOGIN_TITLE}>
-          <Form onSubmit={handleLogin} ref={form}>
-            <div className="form-group">
-              <label htmlFor="username">{FORM.EMAIL.USERNAME}</label>
-              <Input
-                type="text"
-                className="form-control"
-                name="username"
-                value={username}
-                onChange={onChangeUsername}
-                validations={[required]}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="password">{FORM.EMAIL.PASSWORD}</label>
-              <Input
-                type="password"
-                className="form-control"
-                name="password"
-                value={password}
-                onChange={onChangePassword}
-                validations={[required]}
-              />
-            </div>
-
-            <div className="form-group">
-              <button className="btn btn-primary btn-block" disabled={loading}>
-                {loading && (
-                  <span className="spinner-border spinner-border-sm"></span>
-                )}
-                <span>{FORM.LOGIN_BUTTON}</span>
-              </button>
-            </div>
-
-            {message && (
+    <>
+      <div className="col-md-12 p-5">
+        <div className="card card-container p-2">
+          <Modal titleText={FORM.LOGIN_TITLE}>
+            <Form onSubmit={handleLogin} ref={form}>
               <div className="form-group">
-                <div className="alert alert-danger" role="alert">
-                  {message}
-                </div>
+                <label htmlFor="username">{FORM.EMAIL.USERNAME}</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="username"
+                  value={username}
+                  onChange={onChangeUsername}
+                  validations={[required]}
+                />
               </div>
-            )}
-            <CheckButton style={{ display: "none" }} ref={checkBtn} />
-          </Form>
 
-          <Link to={"/updatepassword"}>forgot your password?</Link>
-        </Modal>
+              <div className="form-group">
+                <label htmlFor="password">{FORM.EMAIL.PASSWORD}</label>
+                <Input
+                  type="password"
+                  className="form-control"
+                  name="password"
+                  value={password}
+                  onChange={onChangePassword}
+                  validations={[required]}
+                />
+              </div>
+
+              <div className="form-group">
+                <button
+                  className="btn btn-primary btn-block"
+                  disabled={loading}
+                >
+                  {loading && (
+                    <span className="spinner-border spinner-border-sm"></span>
+                  )}
+                  <span>{FORM.LOGIN_BUTTON}</span>
+                </button>
+              </div>
+
+              {message && (
+                <div className="form-group">
+                  <div className="alert alert-danger" role="alert">
+                    {message}
+                  </div>
+                </div>
+              )}
+              <CheckButton style={{ display: "none" }} ref={checkBtn} />
+            </Form>
+
+            <Link to={"/updatepassword"}>forgot your password?</Link>
+          </Modal>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

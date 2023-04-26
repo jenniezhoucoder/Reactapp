@@ -16,7 +16,8 @@ module.exports = function (app) {
   app.post("/api/test/addproduct", controller.addProducts);
 
   //get product detail
-  app.get("/api/test/user/:id", controller.productDetail);
+  // app.get("/api/test/user/:id", controller.productDetail);
+  app.get("/api/test/:id", controller.productDetail);
 
   //edit product
   app.get("/api/test/editproduct/:id", controller.editProduct);

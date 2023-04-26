@@ -14,7 +14,7 @@ const User = mongoose.model(
     ],
     shoppingCart: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
+      ref: "ShoppingCart",
     },
   })
 );

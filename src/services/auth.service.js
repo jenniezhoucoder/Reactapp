@@ -47,12 +47,18 @@ const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
 };
 
+const isAdmin = () => {
+  const user = getCurrentUser();
+  return user && user.roles && user.roles.includes("ROLE_ADMIN");
+};
+
 const AuthService = {
   register,
   login,
   // updatepassword,
   logout,
   getCurrentUser,
+  isAdmin,
 };
 
 export default AuthService;

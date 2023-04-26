@@ -25,5 +25,5 @@ module.exports = function (app) {
   app.post("/api/auth/signin", controller.signin);
 
   //update password
-  app.post("/api/auth/updatepassword", controller.updatePassword);
+  // app.post("/api/auth/updatepassword", controller.updatePassword);
 };
