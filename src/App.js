@@ -8,7 +8,6 @@ import "./App.css";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { Modal } from "react-bootstrap";
 
 import AuthService from "./services/auth.service";
 
@@ -23,15 +22,15 @@ import CreateProduct from "./components/Product/CreateProduct";
 import ProductDetail from "./components/Product/ProductDetail";
 import EditProduct from "./components/Product/EditProduct";
 import ShoppingCart from "./components/Cart/ShoppingCart";
+import TempCart from "./components/Cart/TempCart";
 import { useNavigate } from "react-router-dom";
 
 const App = () => {
   const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
+  const user = AuthService.getCurrentUser();
 
   useEffect(() => {
-    const user = AuthService.getCurrentUser();
-
     if (user) {
       setCurrentUser(user);
       setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
@@ -113,6 +112,15 @@ const App = () => {
                 Register
               </Link>
             </li>
+
+            {/* <Button variant="link" onClick={() => navigate("/temp_cart")}>
+              <i className="bi bi-cart"></i>
+            </Button> */}
+            <li className="nav-item">
+              <Link to={"/tempcart"} className="nav-link">
+                <i className="bi bi-cart"></i>
+              </Link>
+            </li>
           </div>
         )}
       </nav>
@@ -131,6 +139,7 @@ const App = () => {
           <Route path="/user/:id" element={<ProductDetail />} />
           <Route path="/editproduct/:id" element={<EditProduct />} />
           <Route path="/cart/:userId" element={<ShoppingCart />} />
+          <Route path="/tempcart" element={<TempCart />} />
         </Routes>
       </div>
 

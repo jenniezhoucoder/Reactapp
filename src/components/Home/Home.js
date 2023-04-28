@@ -11,30 +11,12 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
 const Home = () => {
-  const [content, setContent] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  // useEffect(() => {
-  //   UserService.getPublicContent().then(
-  //     (response) => {
-  //       setContent(response.data);
-  //     },
-  //     (error) => {
-  //       const _content =
-  //         (error.response && error.response.data) ||
-  //         error.message ||
-  //         error.toString();
-
-  //       setContent(_content);
-  //     }
-  //   );
-  // }, []);
+  // const [content, setContent] = useState("");
+  // const [isAdmin, setIsAdmin] = useState(false);
 
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
-  // const [sort, setSort] = useState("");
-  // const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     axios
@@ -49,20 +31,8 @@ const Home = () => {
   }, [page]);
 
   return (
-    // <div className="container">
-    //   <header className="jumbotron">
-    //     <h3>{content}</h3>
-    //   </header>
-    //   {/* <Product /> */}
-    // </div>
-
     <>
-      {/* <div className="d-flex justify-content-end my-3">
-        <Link to={"/addproduct"}>
-          <Button variant="primary">Add Product</Button>
-        </Link>
-      </div> */}
-      <Row xs={1} md={4}>
+      {/* <Row xs={1} md={4}>
         {products.map((product) => (
           <Col key={product.id}>
             <Card style={{ width: "16rem", height: "43rem" }}>
@@ -71,19 +41,9 @@ const Home = () => {
                 <Card.Title>{product.name}</Card.Title>
                 <Card.Text>${product.price}</Card.Text>
                 <div className="flex row justify-content-start">
-                  {/* <Button variant="secondary">+</Button>
-                <Card.Text>{product.quantity}</Card.Text>
-                <Button variant="light">-</Button> */}
-                  {/* <Button variant="primary">Add to cart</Button>
-                  <Button variant="light">
-                    <Link to={`/editproduct/${product.id}`}>Edit product</Link>
-                  </Button> */}
                   <Card.Text>{product.description}</Card.Text>
                 </div>
               </Card.Body>
-              {/* <Card.Footer>
-                <Link to={`/user/${product.id}`}>View Details</Link>
-              </Card.Footer> */}
             </Card>
           </Col>
         ))}
@@ -103,7 +63,8 @@ const Home = () => {
             Next
           </Button>
         )}
-      </div>
+      </div> */}
+      <Product />
     </>
   );
 };

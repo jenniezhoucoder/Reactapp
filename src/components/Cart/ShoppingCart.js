@@ -11,21 +11,23 @@ import axios from "axios";
 import { Col, Container, Row } from "react-bootstrap";
 
 const ShoppingCart = () => {
-  //   const [show, setShow] = useState(false);
-  //   const handleClose = () => setShow(false);
-  //   const handleShow = () => setShow(true);
-
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
 
   const { userId } = useParams();
-  const username = AuthService.getCurrentUser().username;
+  const user = AuthService.getCurrentUser();
+  const username = user ? user.username : null;
 
   useEffect(() => {
+    // if (!user) {
+    //   const cartData =
+    //     localStorage.getItem("cart") || JSON.stringify({ products: [] });
+    //   const cart = JSON.parse(cartData);
+    //   setCart(cart);
+    // } else {
     const fetchCart = async () => {
       try {
         const response = await CartService.getCart(userId);
-        // console.log(response.data);
         setCart(response.data.products);
         setTotal(response.data.total);
       } catch (error) {
@@ -33,6 +35,7 @@ const ShoppingCart = () => {
       }
     };
     fetchCart();
+    // }
   }, [userId]);
 
   const handleRemoveToCart = async (productId) => {
@@ -81,7 +84,7 @@ const ShoppingCart = () => {
             Apply
           </Button>
         </InputGroup>
-        <p>Subtotal: {total}</p>
+        <h4>Subtotal: ${total}</h4>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="primary">Continue to checkout</Button>

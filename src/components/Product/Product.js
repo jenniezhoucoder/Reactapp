@@ -7,16 +7,17 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import AuthService from "../../services/auth.service";
 import CartService from "../../services/cart.service";
-import { DropdownButton, Dropdown } from "react-bootstrap";
+import { Dropdown } from "react-bootstrap";
 
 function Product() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
-  // const [sortedProducts, setSortedProducts] = useState([]);
+  const [cart, setCart] = useState([]);
 
-  const isAdmin = AuthService.isAdmin();
-  const username = AuthService.getCurrentUser().username;
+  // const isAdmin = AuthService.isAdmin();
+  const currentUser = AuthService.getCurrentUser();
+  const isAdmin = currentUser && AuthService.isAdmin();
 
   useEffect(() => {
     axios
@@ -50,15 +51,40 @@ function Product() {
 
   const handleAddToCart = async (productId, quantity) => {
     try {
-      // const response = await CartService.addToCart(username);
-      const response = await axios.post(
-        `http://localhost:8080/api/user/${username}/cart`,
-        {
-          productId: productId,
-          quantity: quantity,
+      let response;
+      //user login
+      if (currentUser) {
+        const userId = currentUser && currentUser.id;
+        response = await axios.post(
+          `http://localhost:8080/api/user/${userId}/cart`,
+          {
+            productId: productId,
+            quantity: quantity,
+          }
+        );
+      } else {
+        //user not login
+        const cartItemsFromLocalStorage = JSON.parse(
+          localStorage.getItem("cart") || "[]"
+        );
+        const existingCartItem = cartItemsFromLocalStorage.find(
+          (item) => item.productId === productId
+        );
+
+        if (existingCartItem) {
+          existingCartItem.quantity += 1;
+        } else {
+          const newCartItem = {
+            productId: productId,
+            quantity: 1,
+          };
+          cartItemsFromLocalStorage.push(newCartItem);
         }
-      );
-      // console.log(productId);
+
+        localStorage.setItem("cart", JSON.stringify(cartItemsFromLocalStorage));
+        setCart(cartItemsFromLocalStorage);
+      }
+      console.log(productId);
     } catch (err) {
       console.error(err);
     }
@@ -124,6 +150,7 @@ function Product() {
           </Col>
         ))}
       </Row>
+
       <div className="d-flex justify-content-end my-3">
         {page > 1 && (
           <Button

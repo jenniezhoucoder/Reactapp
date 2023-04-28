@@ -29,11 +29,6 @@ const validEmail = (value) => {
 };
 
 const ForgotPassword = () => {
-  //   let navigate = useNavigate();
-
-  // const [email, setEmail] = useState("");
-  // const [message, setMessage] = useState("");
-
   const form = useRef();
   const checkBtn = useRef();
 
@@ -52,13 +47,6 @@ const ForgotPassword = () => {
     } else {
       setStatus("error");
     }
-
-    // try {
-    //   const response = await axios.post("/api/auth/updatepassword", { email });
-    //   setMessage(response.data.message);
-    // } catch (error) {
-    //   setMessage(error.response.data.error);
-    // }
   };
 
   return (

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ProductService from "../../services/product.service";
 import { Button } from "react-bootstrap";
 
@@ -12,6 +13,7 @@ const CreateProduct = () => {
   const [link, setLink] = useState("");
 
   const [errorMessage, setErrorMessages] = useState([]);
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -34,6 +36,10 @@ const CreateProduct = () => {
         setPrice("");
         setQuantity("");
         setLink("");
+      })
+      .then(() => {
+        navigate("/user");
+        window.location.reload();
       })
       .catch((error) => {
         console.error(error);

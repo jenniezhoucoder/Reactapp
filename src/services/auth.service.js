@@ -24,21 +24,6 @@ const login = (username, password) => {
     });
 };
 
-// const updatepassword = (email) => {
-//   return axios
-//     .post(API_URL + "updatepassword", {
-//       email,
-//     })
-//     .then((response) => {
-//       return response.data;
-//     });
-// };
-
-// const updatepassword = (email) => {
-//update password by email
-//console.log("update password syccessfully");
-// };
-
 const logout = () => {
   localStorage.removeItem("user");
 };

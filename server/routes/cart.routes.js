@@ -1,4 +1,5 @@
 const controller = require("../controllers/cart.controller");
+const { authJwt } = require("../middlewares");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -12,7 +13,9 @@ module.exports = function (app) {
   //shopping cart
   app.get("/api/user/cart/:userId", controller.getCart);
 
-  app.post("/api/user/:username/cart", controller.addToCart);
+  app.post("/api/user/:userId/cart", controller.addToCart);
+
+  app.get("/api/tempcart", controller.getTempCart);
 
   app.delete("/api/user/:username/cart", controller.removeFromCart);
 
