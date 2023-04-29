@@ -8,6 +8,7 @@ import { FORM } from "../../constants";
 import { Link } from "react-router-dom";
 
 import AuthService from "../../services/auth.service";
+import CartService from "../../services/cart.service";
 
 const required = (value) => {
   if (!value) {
@@ -40,7 +41,22 @@ const Login = () => {
     setPassword(password);
   };
 
-  const handleLogin = (e) => {
+  // const mergeTempCartToUserCart = async (userId) => {
+  //   try {
+  //     const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+  //     console.log(cartItems);
+
+  //     if (cartItems.length > 0) {
+  //       const response = await CartService.mergeCart(userId, cartItems);
+  //       localStorage.removeItem("cart");
+  //       setUsername(response.data);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     setMessage("");
@@ -66,6 +82,11 @@ const Login = () => {
           setMessage(resMessage);
         }
       );
+      // .then(async () => {
+      //   const user = localStorage.getItem("user");
+      //   await mergeTempCartToUserCart(user.id);
+      //   setUsername(username);
+      // });
     } else {
       setLoading(false);
     }

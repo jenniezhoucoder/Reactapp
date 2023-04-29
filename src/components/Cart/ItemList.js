@@ -23,7 +23,7 @@ const CartItem = ({
       </Col>
       <Col>
         <h4>{name}</h4>
-        <p>{quantity}</p>
+        <p>Quantity: {quantity}</p>
       </Col>
       <Col>
         <h5>${price}</h5>

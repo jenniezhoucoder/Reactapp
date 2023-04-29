@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const required = (value) => {
@@ -16,6 +17,7 @@ const required = (value) => {
 const EditProductPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -31,6 +33,10 @@ const EditProductPage = () => {
       .put(`http://localhost:8080/api/test/editproduct/${id}`, product)
       .then(() => {
         alert("Product updated successfully");
+      })
+      .then(() => {
+        navigate("/user");
+        window.location.reload();
       })
       .catch((error) => {
         console.error(error);

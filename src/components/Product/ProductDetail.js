@@ -35,15 +35,10 @@ function ProductDetail() {
             <Card.Title>{product.name}</Card.Title>
             <Card.Text>${product.price}</Card.Text>
             <Card.Text>{product.description}</Card.Text>
-            <Button variant="primary">Add to cart</Button>
-            {/* <ButtonGroup size="sm">
-              <Button variant="secondary">+</Button>
-              <Button variant="secondary">num</Button>
-              <Button variant="secondary">-</Button>
-            </ButtonGroup> */}
+            {/* <Button>Add to cart</Button>
             <Button variant="light">
               <Link to={`/editproduct/${product.id}`}>Edit product</Link>
-            </Button>
+            </Button> */}
             <Card.Text style={{ color: "grey" }}>
               In Stock: {product.quantity}
             </Card.Text>

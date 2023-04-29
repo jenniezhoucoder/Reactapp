@@ -9,23 +9,6 @@ const TempCart = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
-    // if (cartItems.length > 0) {
-    //   axios
-    //     .get("http://localhost:8080/api/tempcart", { cartItems })
-    //     .then((res) => {
-    //       setProducts(res.data);
-    //       console.log(res.data);
-    //       setLoading(false);
-    //     })
-    //     .catch((err) => {
-    //       console.error(err);
-    //       setLoading(false);
-    //     });
-    // }
-    // else {
-    //   setLoading(false);
-    // }
     const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
     const cartItemIds = cartItems.map((item) => item.productId);
     const cartQuantities = cartItems.map((item) => item.quantity);
@@ -39,7 +22,6 @@ const TempCart = () => {
         )
         .then((res) => {
           setProducts(res.data);
-          console.log(res.data);
           setLoading(false);
         })
         .catch((err) => {

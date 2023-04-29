@@ -19,12 +19,6 @@ const ShoppingCart = () => {
   const username = user ? user.username : null;
 
   useEffect(() => {
-    // if (!user) {
-    //   const cartData =
-    //     localStorage.getItem("cart") || JSON.stringify({ products: [] });
-    //   const cart = JSON.parse(cartData);
-    //   setCart(cart);
-    // } else {
     const fetchCart = async () => {
       try {
         const response = await CartService.getCart(userId);
@@ -35,7 +29,6 @@ const ShoppingCart = () => {
       }
     };
     fetchCart();
-    // }
   }, [userId]);
 
   const handleRemoveToCart = async (productId) => {

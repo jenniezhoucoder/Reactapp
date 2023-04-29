@@ -505,3 +505,73 @@ exports.getTempCart = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// exports.mergeCart = async (req, res) => {
+//   try {
+//     const { userId } = req.body;
+//     const userCart = await ShoppingCart.findOne({ user: userId });
+
+//     if (!userCart) {
+//       const newCart = new ShoppingCart({
+//         user: userId,
+//         products: [],
+//       });
+//       await newCart.save();
+//     }
+
+//     const cartItems = req.body.cartItems;
+//     const newProductIds = [];
+
+//     console.log(cartItems);
+
+//     cartItems.forEach((cartItem) => {
+//       const { productId, quantity } = cartItem;
+//       const index = userCart.products.findIndex(
+//         (p) => p.product.toString() === productId.toString()
+//       );
+//       if (index === -1) {
+//         newProductIds.push(productId);
+//         userCart.products.push({ product: productId, quantity });
+//       } else {
+//         userCart.products[index].quantity += quantity;
+//       }
+//     });
+
+//     const existingProductIds = userCart.products.map((item) =>
+//       item.product.toString()
+//     );
+
+//     const cartItemIds = cartItems.map((item) => item.productId);
+
+//     existingProductIds.forEach(async (productId) => {
+//       if (!cartItemIds.includes(productId)) {
+//         return;
+//       }
+
+//       const existingCartItem = userCart.products.find(
+//         (p) => p.product.toString() === productId.toString()
+//       );
+//       const cartItem = cartItems.find(
+//         (p) => p.productId.toString() === productId.toString()
+//       );
+//       const quantityDiff = cartItem.quantity - existingCartItem.quantity;
+
+//       await ShoppingCart.findOneAndUpdate(
+//         {
+//           user: userId,
+//           products: { $elemMatch: { product: productId } },
+//         },
+//         { $inc: { "products.$.quantity": quantityDiff } }
+//       );
+//     });
+
+//     await userCart.save();
+
+//     res
+//       .status(200)
+//       .json({ success: true, message: "Cart merged successfully" });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ success: false, message: "Internal server error" });
+//   }
+// };

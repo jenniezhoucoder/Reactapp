@@ -15,12 +15,14 @@ module.exports = function (app) {
 
   app.post("/api/user/:userId/cart", controller.addToCart);
 
-  app.get("/api/tempcart", controller.getTempCart);
-
   app.delete("/api/user/:username/cart", controller.removeFromCart);
 
   app.put(
     "api/user/cart/:userId/product/:productId",
     controller.updateCartQuantity
   );
+
+  app.get("/api/tempcart", controller.getTempCart);
+
+  // app.post("/api/user/cart/:userId/merge", controller.mergeCart);
 };
