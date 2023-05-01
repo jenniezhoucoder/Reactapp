@@ -6,8 +6,14 @@ const getCart = (userId) => {
   return axios.get(API_URL + `cart/${userId}`);
 };
 
-// const mergeCart = (userId) => {
-//   return axios.post(API_URL + `${userId}/merge`);
+// const mergeCart = (userId, cartItems) => {
+//   return axios.post(API_URL + `${userId}/merge`, {
+//     userId: userId,
+//     cartItems: cartItems.map((item) => ({
+//       productId: item.productId,
+//       quantity: item.quantity,
+//     })),
+//   });
 // };
 
 const CartService = {

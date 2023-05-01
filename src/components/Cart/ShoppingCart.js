@@ -39,10 +39,29 @@ const ShoppingCart = () => {
       );
       const updatedCart = response.data;
       setCart(updatedCart.products);
+      setTotal(response.data.total);
     } catch (err) {
       console.error(err);
     }
   };
+
+  const handleUpdateTotalPrice = (deltaPrice) => {
+    setTotal(total + deltaPrice);
+  };
+
+  // const handleUpdateQuantity = async (productId, newQuantity) => {
+  //   const updatedCart = cart.map((item) => {
+  //     if ((item.product._id = productId)) {
+  //       item.quantity = newQuantity;
+  //     }
+  //     return item;
+  //   });
+  //   const newTotoal = updatedCart.reduce((acc, item) => {
+  //     return acc + item.product.price * item.quantity;
+  //   }, 0);
+  //   setCart(updatedCart);
+  //   setTotal(newTotoal);
+  // };
 
   return (
     <>
@@ -62,6 +81,7 @@ const ShoppingCart = () => {
                   quantity={item.quantity}
                   productId={item.product._id}
                   onRemoveFromCart={handleRemoveToCart}
+                  updateTotalPrice={handleUpdateTotalPrice}
                 />
               </Row>
             ))}

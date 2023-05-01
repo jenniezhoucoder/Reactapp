@@ -11,3 +11,17 @@ export default function authHeader() {
     return {};
   }
 }
+
+// export default function authHeader() {
+//   const accessToken = JSON.parse(localStorage.getItem("accessToken"));
+
+//   if (accessToken) {
+//     // for Node.js Express back-end
+//     return {
+//       "x-access-token": accessToken,
+//       // "Content-Type": "application/json",
+//     };
+//   } else {
+//     return {};
+//   }
+// }

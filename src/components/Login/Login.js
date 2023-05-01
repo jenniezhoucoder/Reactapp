@@ -6,6 +6,7 @@ import CheckButton from "react-validation/build/button";
 import Modal from "../../common/modal";
 import { FORM } from "../../constants";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import AuthService from "../../services/auth.service";
 import CartService from "../../services/cart.service";
@@ -41,21 +42,6 @@ const Login = () => {
     setPassword(password);
   };
 
-  // const mergeTempCartToUserCart = async (userId) => {
-  //   try {
-  //     const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
-  //     console.log(cartItems);
-
-  //     if (cartItems.length > 0) {
-  //       const response = await CartService.mergeCart(userId, cartItems);
-  //       localStorage.removeItem("cart");
-  //       setUsername(response.data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -65,28 +51,46 @@ const Login = () => {
     form.current.validateAll();
 
     if (checkBtn.current.context._errors.length === 0) {
-      AuthService.login(username, password).then(
-        () => {
-          navigate("/user");
-          window.location.reload();
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
+      AuthService.login(username, password)
+        .then(async () => {
+          const user = AuthService.getCurrentUser();
+          const cartItems = JSON.parse(localStorage.getItem("cart"));
+          console.log(cartItems);
+          if (user) {
+            if (cartItems && cartItems.length > 0) {
+              cartItems.forEach((item) => {
+                console.log("userid:" + user.id);
+                console.log("cartItem" + item.productId);
+                const response = axios.post(
+                  `http://localhost:8080/api/user/${user.id}/cart`,
+                  {
+                    productId: item.productId,
+                    quantity: item.quantity,
+                  }
+                );
+              });
+            }
+          }
+          setUsername(username);
+        })
 
-          setLoading(false);
-          setMessage(resMessage);
-        }
-      );
-      // .then(async () => {
-      //   const user = localStorage.getItem("user");
-      //   await mergeTempCartToUserCart(user.id);
-      //   setUsername(username);
-      // });
+        .then(
+          () => {
+            navigate("/home");
+            window.location.reload();
+          },
+          (error) => {
+            const resMessage =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
+
+            setLoading(false);
+            setMessage(resMessage);
+          }
+        );
     } else {
       setLoading(false);
     }

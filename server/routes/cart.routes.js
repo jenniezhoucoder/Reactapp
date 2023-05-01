@@ -1,5 +1,4 @@
 const controller = require("../controllers/cart.controller");
-const { authJwt } = require("../middlewares");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -24,5 +23,5 @@ module.exports = function (app) {
 
   app.get("/api/tempcart", controller.getTempCart);
 
-  // app.post("/api/user/cart/:userId/merge", controller.mergeCart);
+  app.post("/api/user/cart/:userId/cart", controller.updateCartItemQuantity);
 };

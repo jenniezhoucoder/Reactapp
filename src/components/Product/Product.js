@@ -15,13 +15,12 @@ function Product() {
   const [maxPage, setMaxPage] = useState(1);
   const [cart, setCart] = useState([]);
 
-  // const isAdmin = AuthService.isAdmin();
   const currentUser = AuthService.getCurrentUser();
   const isAdmin = currentUser && AuthService.isAdmin();
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/test/getproducts?page=${page}&perPage=8`)
+      .get(`http://localhost:8080/api/test/getproducts?page=${page}&perPage=6`)
       .then((response) => {
         setProducts(response.data.products);
         setMaxPage(response.data.maxPage);
@@ -119,10 +118,10 @@ function Product() {
         </Dropdown>
       </div>
 
-      <Row xs={1} md={4}>
+      <Row xs={1} md={3}>
         {products.map((product) => (
           <Col key={product._id}>
-            <Card style={{ width: "16rem", height: "30rem" }}>
+            <Card>
               <Card.Img variant="top" src={product.link} />
               <Card.Body>
                 <Card.Title>{product.name}</Card.Title>

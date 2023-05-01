@@ -506,72 +506,52 @@ exports.getTempCart = async (req, res) => {
   }
 };
 
-// exports.mergeCart = async (req, res) => {
-//   try {
-//     const { userId } = req.body;
-//     const userCart = await ShoppingCart.findOne({ user: userId });
+exports.updateCartItemQuantity = async (req, res) => {
+  try {
+    const { productId, quantity } = req.body;
+    const userId = req.params.userId;
 
-//     if (!userCart) {
-//       const newCart = new ShoppingCart({
-//         user: userId,
-//         products: [],
-//       });
-//       await newCart.save();
-//     }
+    const user = await User.findById(userId).populate({
+      path: "shoppingCart",
+      populate: {
+        path: "products.product",
+        model: "Product",
+      },
+    });
 
-//     const cartItems = req.body.cartItems;
-//     const newProductIds = [];
+    const productIndex = user.shoppingCart.products.findIndex(
+      (p) => p.product._id.toString() === productId.toString()
+    );
 
-//     console.log(cartItems);
+    if (productIndex < 0) {
+      return res.status(404).json({ message: "Product not found in cart" });
+    }
 
-//     cartItems.forEach((cartItem) => {
-//       const { productId, quantity } = cartItem;
-//       const index = userCart.products.findIndex(
-//         (p) => p.product.toString() === productId.toString()
-//       );
-//       if (index === -1) {
-//         newProductIds.push(productId);
-//         userCart.products.push({ product: productId, quantity });
-//       } else {
-//         userCart.products[index].quantity += quantity;
-//       }
-//     });
+    const currentQuantity = user.shoppingCart.products[productIndex].quantity;
 
-//     const existingProductIds = userCart.products.map((item) =>
-//       item.product.toString()
-//     );
+    if (currentQuantity === quantity) {
+      return res.json({ message: "Quantity is already up to date" });
+    }
 
-//     const cartItemIds = cartItems.map((item) => item.productId);
+    user.shoppingCart.products[productIndex].quantity = quantity;
 
-//     existingProductIds.forEach(async (productId) => {
-//       if (!cartItemIds.includes(productId)) {
-//         return;
-//       }
+    const total = user.shoppingCart.products.reduce((acc, p) => {
+      if (p.product && p.product.price) {
+        return acc + p.product.price * p.quantity;
+      }
+      return acc;
+    }, 0);
+    user.shoppingCart.total = total;
 
-//       const existingCartItem = userCart.products.find(
-//         (p) => p.product.toString() === productId.toString()
-//       );
-//       const cartItem = cartItems.find(
-//         (p) => p.productId.toString() === productId.toString()
-//       );
-//       const quantityDiff = cartItem.quantity - existingCartItem.quantity;
+    await user.shoppingCart.save();
 
-//       await ShoppingCart.findOneAndUpdate(
-//         {
-//           user: userId,
-//           products: { $elemMatch: { product: productId } },
-//         },
-//         { $inc: { "products.$.quantity": quantityDiff } }
-//       );
-//     });
+    const updatedProduct = user.shoppingCart.products[productIndex].product;
+    const updatedPrice = updatedProduct.price;
 
-//     await userCart.save();
-
-//     res
-//       .status(200)
-//       .json({ success: true, message: "Cart merged successfully" });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ success: false, message: "Internal server error" });
-//   }
-// };
+    // return res.json(user.shoppingCart);
+    return res.json({ cart: user.shoppingCart, updatedPrice: updatedPrice });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

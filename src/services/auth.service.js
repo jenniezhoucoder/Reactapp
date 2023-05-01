@@ -1,4 +1,5 @@
 import axios from "axios";
+import authHeader from "./auth-header";
 
 const API_URL = "http://localhost:8080/api/auth/";
 
@@ -41,7 +42,6 @@ const isAdmin = () => {
 const AuthService = {
   register,
   login,
-  // updatepassword,
   logout,
   getCurrentUser,
   isAdmin,

@@ -126,3 +126,35 @@ exports.signin = (req, res) => {
       });
     });
 };
+
+// exports.getCurrentUser = (req, res) => {
+//   // User.findById(req.userId)
+//   const userId = mongoose.Types.ObjectId(req.userId);
+//   console.log(userId);
+
+//   User.findById(userId)
+//     .populate("roles", "-__v")
+//     .exec((err, user) => {
+//       if (err) {
+//         res.status(500).send({ message: err });
+//         return;
+//       }
+
+//       if (!user) {
+//         return res.status(404).send({ message: "User Not found." });
+//       }
+
+//       var authorities = [];
+
+//       for (let i = 0; i < user.roles.length; i++) {
+//         authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
+//       }
+//       res.status(200).send({
+//         id: user._id,
+//         username: user.username,
+//         email: user.email,
+//         roles: authorities,
+//         accessToken: token,
+//       });
+//     });
+// };
