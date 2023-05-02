@@ -72,7 +72,7 @@ function ProductDetail() {
     <>
       <div className="p-5 flex row justify-content-center">
         <Card>
-          <Row noGutters>
+          <Row>
             <Col md={4}>
               <Card.Img variant="top" src={product.link} />
             </Col>
