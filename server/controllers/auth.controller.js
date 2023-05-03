@@ -127,34 +127,33 @@ exports.signin = (req, res) => {
     });
 };
 
-// exports.getCurrentUser = (req, res) => {
-//   // User.findById(req.userId)
-//   const userId = mongoose.Types.ObjectId(req.userId);
-//   console.log(userId);
+exports.getCurrentUser = (req, res) => {
+  const token = req.headers["x-access-token"];
+  const decoded = jwt.decode(token);
 
-//   User.findById(userId)
-//     .populate("roles", "-__v")
-//     .exec((err, user) => {
-//       if (err) {
-//         res.status(500).send({ message: err });
-//         return;
-//       }
+  User.findById(decoded.id)
+    .populate("roles", "-__v")
+    .exec((err, user) => {
+      if (err) {
+        res.status(500).send({ message: err });
+        return;
+      }
 
-//       if (!user) {
-//         return res.status(404).send({ message: "User Not found." });
-//       }
+      if (!user) {
+        return res.status(404).send({ message: "User Not found." });
+      }
 
-//       var authorities = [];
+      var authorities = [];
 
-//       for (let i = 0; i < user.roles.length; i++) {
-//         authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
-//       }
-//       res.status(200).send({
-//         id: user._id,
-//         username: user.username,
-//         email: user.email,
-//         roles: authorities,
-//         accessToken: token,
-//       });
-//     });
-// };
+      for (let i = 0; i < user.roles.length; i++) {
+        authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
+      }
+
+      res.status(200).send({
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        roles: authorities,
+      });
+    });
+};

@@ -9,8 +9,10 @@ import AuthService from "../../services/auth.service";
 function ProductDetail() {
   const [product, setProduct] = useState(null);
   const { id } = useParams();
-  const currentUser = AuthService.getCurrentUser();
+  // const currentUser = AuthService.getCurrentUser();
   const [cart, setCart] = useState([]);
+
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     axios
@@ -22,6 +24,18 @@ function ProductDetail() {
         console.log(error);
       });
   }, [id]);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const user = await AuthService.getCurrentUser();
+        setCurrentUser(user);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchCurrentUser();
+  }, []);
 
   const handleAddToCart = async (productId, quantity) => {
     try {

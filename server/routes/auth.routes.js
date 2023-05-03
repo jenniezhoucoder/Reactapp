@@ -25,5 +25,5 @@ module.exports = function (app) {
   app.post("/api/auth/signin", controller.signin);
 
   //get current user info
-  // app.get("api/auth/user", [authJwt.verifyToken], controller.getCurrentUser);
+  app.get("/api/auth/user", [authJwt.verifyToken], controller.getCurrentUser);
 };

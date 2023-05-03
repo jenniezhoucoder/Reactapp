@@ -28,21 +28,24 @@ import Product from "./components/Product/Product";
 const App = () => {
   const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
-  const user = AuthService.getCurrentUser();
-
   const [cart, setCart] = useState([]);
-  // const curUser = AuthService.getCurrentUser();
 
   useEffect(() => {
-    if (user) {
-      setCurrentUser(user);
-      setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
+    async function fetchData() {
+      const user = await AuthService.getCurrentUser();
+      console.log(user);
+      if (user) {
+        setCurrentUser(user);
+        setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
+      }
     }
+    fetchData();
   }, []);
 
   const handleAddToCart = async (productId, quantity) => {
     try {
       let response;
+      const user = await AuthService.getCurrentUser();
       //user login
       if (user) {
         const userId = user && user.id;

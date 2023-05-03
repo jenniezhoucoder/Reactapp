@@ -14,9 +14,11 @@ function Product() {
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
   const [cart, setCart] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const currentUser = AuthService.getCurrentUser();
-  const isAdmin = currentUser && AuthService.isAdmin();
+  // const currentUser = AuthService.getCurrentUser();
+  // const isAdmin = currentUser && AuthService.isAdmin();
 
   useEffect(() => {
     axios
@@ -29,6 +31,15 @@ function Product() {
         console.error(error);
       });
   }, [page]);
+
+  useEffect(() => {
+    async function fetchCurrentUser() {
+      const user = await AuthService.getCurrentUser();
+      setCurrentUser(user);
+      setIsAdmin(user && user.roles.includes("ROLE_ADMIN"));
+    }
+    fetchCurrentUser();
+  }, []);
 
   const sortByCreatedAtAsc = () => {
     const sortedProducts = [...products].sort(

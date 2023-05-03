@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import AuthService from "../../services/auth.service";
 
 const Profile = () => {
-  const currentUser = AuthService.getCurrentUser();
+  // const currentUser = AuthService.getCurrentUser();
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const user = await AuthService.getCurrentUser();
+      setCurrentUser(user);
+    };
+    fetchCurrentUser();
+  }, []);
+
+  if (!currentUser) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container">

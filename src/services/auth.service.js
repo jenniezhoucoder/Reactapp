@@ -1,5 +1,6 @@
 import axios from "axios";
 import authHeader from "./auth-header";
+import jwt_decode from "jwt-decode";
 
 const API_URL = "http://localhost:8080/api/auth/";
 
@@ -11,7 +12,7 @@ const register = (username, email, password) => {
   });
 };
 
-const login = (username, password) => {
+const login = async (username, password) => {
   return axios
     .post(API_URL + "signin", {
       username,
@@ -19,7 +20,12 @@ const login = (username, password) => {
     })
     .then((response) => {
       if (response.data.accessToken) {
-        localStorage.setItem("user", JSON.stringify(response.data));
+        //   localStorage.setItem("user", JSON.stringify(response.data));
+        // }
+        localStorage.setItem(
+          "token",
+          JSON.stringify(response.data.accessToken)
+        );
       }
       return response.data;
     });
@@ -30,12 +36,27 @@ const logout = () => {
   localStorage.clear();
 };
 
-const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("user"));
+const getCurrentUser = async () => {
+  // return JSON.parse(localStorage.getItem("user"));
+  // const user = JSON.parse(localStorage.getItem("token"));
+  // return user ? user.accessToken : null;
+
+  const token = JSON.parse(localStorage.getItem("token"));
+  if (token) {
+    try {
+      const response = await axios.get(API_URL + "user", {
+        headers: authHeader(),
+      });
+      return response.data;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  return null;
 };
 
-const isAdmin = () => {
-  const user = getCurrentUser();
+const isAdmin = async () => {
+  const user = await getCurrentUser();
   return user && user.roles && user.roles.includes("ROLE_ADMIN");
 };
 

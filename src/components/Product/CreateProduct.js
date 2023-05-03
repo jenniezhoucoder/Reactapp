@@ -38,7 +38,7 @@ const CreateProduct = () => {
         setLink("");
       })
       .then(() => {
-        navigate("/user");
+        navigate("/home");
         window.location.reload();
       })
       .catch((error) => {

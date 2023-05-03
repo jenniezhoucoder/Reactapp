@@ -15,8 +15,21 @@ const ShoppingCart = () => {
   const [total, setTotal] = useState(0);
 
   const { userId } = useParams();
-  const user = AuthService.getCurrentUser();
+  // const user = AuthService.getCurrentUser();
+  const [user, setUser] = useState(null);
   const username = user ? user.username : null;
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const currentUser = await AuthService.getCurrentUser();
+        setUser(currentUser);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchCurrentUser();
+  }, []);
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -48,20 +61,6 @@ const ShoppingCart = () => {
   const handleUpdateTotalPrice = (deltaPrice) => {
     setTotal(total + deltaPrice);
   };
-
-  // const handleUpdateQuantity = async (productId, newQuantity) => {
-  //   const updatedCart = cart.map((item) => {
-  //     if ((item.product._id = productId)) {
-  //       item.quantity = newQuantity;
-  //     }
-  //     return item;
-  //   });
-  //   const newTotoal = updatedCart.reduce((acc, item) => {
-  //     return acc + item.product.price * item.quantity;
-  //   }, 0);
-  //   setCart(updatedCart);
-  //   setTotal(newTotoal);
-  // };
 
   return (
     <>

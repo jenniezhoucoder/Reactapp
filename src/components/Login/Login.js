@@ -53,7 +53,7 @@ const Login = () => {
     if (checkBtn.current.context._errors.length === 0) {
       AuthService.login(username, password)
         .then(async () => {
-          const user = AuthService.getCurrentUser();
+          const user = await AuthService.getCurrentUser();
           const cartItems = JSON.parse(localStorage.getItem("cart"));
           console.log(cartItems);
           if (user) {

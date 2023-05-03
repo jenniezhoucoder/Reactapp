@@ -35,7 +35,7 @@ const EditProductPage = () => {
         alert("Product updated successfully");
       })
       .then(() => {
-        navigate("/user");
+        navigate("/home");
         window.location.reload();
       })
       .catch((error) => {
