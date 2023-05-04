@@ -6,19 +6,29 @@ const getCart = (userId) => {
   return axios.get(API_URL + `cart/${userId}`);
 };
 
-// const mergeCart = (userId, cartItems) => {
-//   return axios.post(API_URL + `${userId}/merge`, {
-//     userId: userId,
-//     cartItems: cartItems.map((item) => ({
-//       productId: item.productId,
-//       quantity: item.quantity,
-//     })),
-//   });
-// };
+const addToCart = (userId, productId, quantity) => {
+  return axios.post(API_URL + `${userId}/cart`, {
+    productId,
+    quantity,
+  });
+};
+
+const removeFromCart = (username, productId) => {
+  return axios.delete(API_URL + `${username}/cart`, { data: { productId } });
+};
+
+const updateCartQuantity = (id, productId, quantity) => {
+  return axios.post(API_URL + `cart/${id}/cart`, {
+    productId,
+    quantity,
+  });
+};
 
 const CartService = {
   getCart,
-  // mergeCart,
+  addToCart,
+  removeFromCart,
+  updateCartQuantity,
 };
 
 export default CartService;

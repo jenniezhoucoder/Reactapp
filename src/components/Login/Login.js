@@ -61,13 +61,18 @@ const Login = () => {
               cartItems.forEach((item) => {
                 console.log("userid:" + user.id);
                 console.log("cartItem" + item.productId);
-                const response = axios.post(
-                  `http://localhost:8080/api/user/${user.id}/cart`,
-                  {
-                    productId: item.productId,
-                    quantity: item.quantity,
-                  }
+                const response = CartService.addToCart(
+                  user.id,
+                  item.productId,
+                  item.quantity
                 );
+                // axios.post(
+                //   `http://localhost:8080/api/user/${user.id}/cart`,
+                //   {
+                //     productId: item.productId,
+                //     quantity: item.quantity,
+                //   }
+                // );
               });
             }
           }

@@ -37,10 +37,6 @@ const logout = () => {
 };
 
 const getCurrentUser = async () => {
-  // return JSON.parse(localStorage.getItem("user"));
-  // const user = JSON.parse(localStorage.getItem("token"));
-  // return user ? user.accessToken : null;
-
   const token = JSON.parse(localStorage.getItem("token"));
   if (token) {
     try {

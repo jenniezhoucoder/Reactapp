@@ -14,8 +14,18 @@ const addProduct = (id, name, description, category, price, quantity, link) => {
   });
 };
 
+const editProduct = (id) => {
+  return axios.get(API_URL + `editproduct/${id}`);
+};
+
+const getProductDetail = (id) => {
+  return axios.get(API_URL + `${id}`);
+};
+
 const ProductService = {
   addProduct,
+  editProduct,
+  getProductDetail,
 };
 
 export default ProductService;

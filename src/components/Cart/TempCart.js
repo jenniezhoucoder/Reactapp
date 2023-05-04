@@ -50,7 +50,7 @@ const TempCart = () => {
 
   return (
     <>
-      <Modal.Header>
+      <Modal.Header closeButton>
         <Modal.Title>Shopping Cart</Modal.Title>
       </Modal.Header>
       <Modal.Body>

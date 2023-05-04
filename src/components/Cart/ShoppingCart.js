@@ -24,6 +24,7 @@ const ShoppingCart = ({
   const userId = user ? user.id : null;
 
   const [isLoading, setIsLoading] = useState(false);
+  const [shouldFetchCart, setShouldFetchCart] = useState(false);
 
   useEffect(() => {
     if (show && user && !shoppingCart.length && !isLoading) {
@@ -34,7 +35,6 @@ const ShoppingCart = ({
     }
   }, [show, user, shoppingCart, isLoading, fetchCart]);
 
-  const [shouldFetchCart, setShouldFetchCart] = useState(false);
   useEffect(() => {
     if (shouldFetchCart) {
       fetchCart();

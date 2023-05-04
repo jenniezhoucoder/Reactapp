@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import AuthService from "../../services/auth.service";
+import ProductService from "../../services/product.service";
 
 function ProductDetail() {
   const [product, setProduct] = useState(null);
@@ -13,8 +14,7 @@ function ProductDetail() {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/api/test/${id}`)
+    ProductService.getProductDetail(id)
       .then((response) => {
         setProduct(response.data);
       })

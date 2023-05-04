@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import ProductService from "../../services/product.service";
 
 const required = (value) => {
   if (!value) {
@@ -20,11 +21,11 @@ const EditProductPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/api/test/editproduct/${id}`)
-      .then((response) => {
-        setProduct(response.data);
-      });
+    // axios
+    //   .get(`http://localhost:8080/api/test/editproduct/${id}`)
+    ProductService.editProduct(id).then((response) => {
+      setProduct(response.data);
+    });
   }, [id]);
 
   const handleFormSubmit = (event) => {

@@ -50,13 +50,7 @@ const App = () => {
       //user login
       if (user) {
         const userId = user && user.id;
-        response = await axios.post(
-          `http://localhost:8080/api/user/${userId}/cart`,
-          {
-            productId: productId,
-            quantity: quantity,
-          }
-        );
+        response = await CartService.addToCart(userId, productId, quantity);
       } else {
         //user not login
         const cartItemsFromLocalStorage = JSON.parse(
@@ -86,7 +80,7 @@ const App = () => {
     }
   };
 
-  //shopping cart
+  // shopping cart
   const fetchCart = async () => {
     try {
       const response = await CartService.getCart(currentUser.id);
@@ -97,16 +91,49 @@ const App = () => {
     }
   };
 
+  // const fetchCart = async () => {
+  //   try {
+  //     const user = AuthService.getCurrentUser();
+  //     let cartItem = [];
+  //     const tempCart = JSON.parse(localStorage.getItem("cart")) || [];
+  //     if (tempCart.length > 0) {
+  //       tempCart.forEach((item) => {
+  //         cartItem.push({ product: item, quantity: item.quantity });
+  //       });
+  //     }
+  //     //if user is logined in
+  //     if (user) {
+  //       const response = await CartService.getCart(user.id);
+  //       if (response.data.length > 0) {
+  //         response.data.forEach((item) => {
+  //           const index = cartItem.findIndex(
+  //             (cartItem) => cartItem.product._id == item.product._id
+  //           );
+
+  //           if (index > 0) {
+  //             cartItem[index].quantity += item.quantity;
+  //           } else {
+  //             cartItem.push(item);
+  //           }
+  //         });
+  //       }
+  //     }
+  //     setShoppingCart(cartItem);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
   const handleRemoveToCart = async (productId) => {
     try {
-      const username = currentUser.username;
-      const response = await axios.delete(
-        `http://localhost:8080/api/user/${username}/cart`,
-        { data: { productId } }
-      );
-      const updatedCart = response.data;
-      setShoppingCart(updatedCart.products);
-      setTotal(response.data.total);
+      const user = await AuthService.getCurrentUser();
+      if (user) {
+        const username = user && user.username;
+        const response = await CartService.removeFromCart(username, productId);
+        const updatedCart = response.data;
+        setShoppingCart(updatedCart.products);
+        setTotal(response.data.total);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -181,11 +208,11 @@ const App = () => {
                 </Link>
               </li>
 
-              {/* <li className="nav-item">
+              <li className="nav-item">
                 <Link to={"/tempcart"} className="nav-link">
                   <i className="bi bi-cart"></i>
                 </Link>
-              </li> */}
+              </li>
             </div>
           )}
         </nav>
@@ -228,7 +255,7 @@ const App = () => {
           <Route path="/addproduct" element={<CreateProduct />} />
           <Route path="/user/:id" element={<ProductDetail />} />
           <Route path="/editproduct/:id" element={<EditProduct />} />
-          {/* <Route path="/tempcart" element={<TempCart />} /> */}
+          <Route path="/tempcart" element={<TempCart />} />
         </Routes>
       </div>
 
