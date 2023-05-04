@@ -9,6 +9,7 @@ import axios from "axios";
 import Button from "react-bootstrap/Button";
 
 import AuthService from "./services/auth.service";
+import CartService from "./services/cart.service";
 
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
@@ -22,18 +23,18 @@ import ProductDetail from "./components/Product/ProductDetail";
 import EditProduct from "./components/Product/EditProduct";
 import ShoppingCart from "./components/Cart/ShoppingCart";
 import TempCart from "./components/Cart/TempCart";
-import { useNavigate } from "react-router-dom";
-import Product from "./components/Product/Product";
 
 const App = () => {
   const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [cart, setCart] = useState([]);
+  const [showCart, setShowCart] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [shoppingCart, setShoppingCart] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       const user = await AuthService.getCurrentUser();
-      console.log(user);
       if (user) {
         setCurrentUser(user);
         setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
@@ -78,17 +79,47 @@ const App = () => {
         localStorage.setItem("cart", JSON.stringify(cartItemsFromLocalStorage));
         setCart(cartItemsFromLocalStorage);
       }
+      fetchCart();
       console.log("productId" + productId);
     } catch (err) {
       console.error(err);
     }
   };
 
+  //shopping cart
+  const fetchCart = async () => {
+    try {
+      const response = await CartService.getCart(currentUser.id);
+      setShoppingCart(response.data.products);
+      setTotal(response.data.total);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleRemoveToCart = async (productId) => {
+    try {
+      const username = currentUser.username;
+      const response = await axios.delete(
+        `http://localhost:8080/api/user/${username}/cart`,
+        { data: { productId } }
+      );
+      const updatedCart = response.data;
+      setShoppingCart(updatedCart.products);
+      setTotal(response.data.total);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleUpdateTotalPrice = (deltaPrice) => {
+    setTotal(total + deltaPrice);
+  };
+
+  //logout
   const logOut = () => {
     AuthService.logout();
   };
-
-  const navigate = useNavigate();
 
   return (
     <>
@@ -111,22 +142,7 @@ const App = () => {
                 </Link>
               </li>
             )}
-
-            {/* {currentUser && (
-              <li className="nav-item">
-                <Link to={"/user"} className="nav-link">
-                  User
-                </Link>
-              </li>
-            )} */}
           </div>
-
-          {/* <InputGroup className="w-50">
-          <Form.Control aria-describedby="basic-addon2" />
-          <Button variant="outline-secondary" id="button-addon2">
-            <i className="bi bi-search"></i>
-          </Button>
-        </InputGroup> */}
 
           {currentUser ? (
             <div className="navbar-nav ml-auto">
@@ -141,11 +157,15 @@ const App = () => {
                 </a>
               </li>
               <Button
+                type="button"
                 variant="link"
-                onClick={() => navigate(`/cart/${currentUser.id}`)}
+                onClick={() => {
+                  setShowCart(true);
+                }}
               >
                 <i className="bi bi-cart"></i>
               </Button>
+              <Button variant="link">${total}</Button>
             </div>
           ) : (
             <div className="navbar-nav ml-auto">
@@ -161,17 +181,27 @@ const App = () => {
                 </Link>
               </li>
 
-              {/* <Button variant="link" onClick={() => navigate("/temp_cart")}>
-              <i className="bi bi-cart"></i>
-            </Button> */}
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link to={"/tempcart"} className="nav-link">
                   <i className="bi bi-cart"></i>
                 </Link>
-              </li>
+              </li> */}
             </div>
           )}
         </nav>
+      </div>
+
+      <div className="container mt-3">
+        <ShoppingCart
+          show={showCart}
+          onHide={() => setShowCart(false)}
+          user={currentUser}
+          total={total}
+          shoppingCart={shoppingCart}
+          fetchCart={fetchCart}
+          handleRemoveToCart={handleRemoveToCart}
+          handleUpdateTotalPrice={handleUpdateTotalPrice}
+        />
       </div>
 
       <div className="container mt-3">
@@ -179,12 +209,16 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route
             path="/home"
-            element={<Home handleAddToCart={handleAddToCart} />}
+            element={
+              <Home
+                // currentUser={currentUser}
+                showAdminBoard={showAdminBoard}
+                // cart={cart}
+                // setCart={setCart}
+                handleAddToCart={handleAddToCart}
+              />
+            }
           />
-          {/* <Route
-            path="/home"
-            element={<Product handleAddToCart={handleAddToCart} />}
-          /> */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
@@ -194,8 +228,7 @@ const App = () => {
           <Route path="/addproduct" element={<CreateProduct />} />
           <Route path="/user/:id" element={<ProductDetail />} />
           <Route path="/editproduct/:id" element={<EditProduct />} />
-          <Route path="/cart/:userId" element={<ShoppingCart />} />
-          <Route path="/tempcart" element={<TempCart />} />
+          {/* <Route path="/tempcart" element={<TempCart />} /> */}
         </Routes>
       </div>
 

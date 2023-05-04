@@ -9,10 +9,8 @@ import AuthService from "../../services/auth.service";
 function ProductDetail() {
   const [product, setProduct] = useState(null);
   const { id } = useParams();
-  // const currentUser = AuthService.getCurrentUser();
-  const [cart, setCart] = useState([]);
-
   const [currentUser, setCurrentUser] = useState(null);
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     axios
@@ -77,7 +75,6 @@ function ProductDetail() {
       console.error(err);
     }
   };
-
   if (!product) {
     return <div>Loading...</div>;
   }

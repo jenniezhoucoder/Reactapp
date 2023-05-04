@@ -9,44 +9,22 @@ import AuthService from "../../services/auth.service";
 import CartService from "../../services/cart.service";
 import { Dropdown } from "react-bootstrap";
 
-function Product() {
-  const [products, setProducts] = useState([]);
-  const [page, setPage] = useState(1);
-  const [maxPage, setMaxPage] = useState(1);
-  const [cart, setCart] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  // const currentUser = AuthService.getCurrentUser();
-  // const isAdmin = currentUser && AuthService.isAdmin();
-
-  useEffect(() => {
-    axios
-      .get(`http://localhost:8080/api/test/getproducts?page=${page}&perPage=6`)
-      .then((response) => {
-        setProducts(response.data.products);
-        setMaxPage(response.data.maxPage);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [page]);
-
-  useEffect(() => {
-    async function fetchCurrentUser() {
-      const user = await AuthService.getCurrentUser();
-      setCurrentUser(user);
-      setIsAdmin(user && user.roles.includes("ROLE_ADMIN"));
-    }
-    fetchCurrentUser();
-  }, []);
-
+function Product({
+  // currentUser,
+  showAdminBoard,
+  products,
+  setProducts,
+  handleAddToCart,
+  page,
+  setPage,
+  maxPage,
+  setMaxPage,
+}) {
   const sortByCreatedAtAsc = () => {
     const sortedProducts = [...products].sort(
       (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
     );
     setProducts(sortedProducts);
-    console.log(sortedProducts);
   };
 
   const sortByPriceAsc = () => {
@@ -59,50 +37,13 @@ function Product() {
     setProducts(sortedProducts);
   };
 
-  const handleAddToCart = async (productId, quantity) => {
-    try {
-      let response;
-      //user login
-      if (currentUser) {
-        const userId = currentUser && currentUser.id;
-        response = await axios.post(
-          `http://localhost:8080/api/user/${userId}/cart`,
-          {
-            productId: productId,
-            quantity: quantity,
-          }
-        );
-      } else {
-        //user not login
-        const cartItemsFromLocalStorage = JSON.parse(
-          localStorage.getItem("cart") || "[]"
-        );
-        const existingCartItem = cartItemsFromLocalStorage.find(
-          (item) => item.productId === productId
-        );
-
-        if (existingCartItem) {
-          existingCartItem.quantity += 1;
-        } else {
-          const newCartItem = {
-            productId: productId,
-            quantity: 1,
-          };
-          cartItemsFromLocalStorage.push(newCartItem);
-        }
-
-        localStorage.setItem("cart", JSON.stringify(cartItemsFromLocalStorage));
-        setCart(cartItemsFromLocalStorage);
-      }
-      console.log(productId);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  if (!products) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
-      {isAdmin && (
+      {showAdminBoard && (
         <div className="d-flex justify-content-end my-3">
           <Link to={"/addproduct"}>
             <Button variant="primary">Add Product</Button>
@@ -144,7 +85,7 @@ function Product() {
                   >
                     Add to cart
                   </Button>
-                  {isAdmin && (
+                  {showAdminBoard && (
                     <Button variant="light">
                       <Link to={`/editproduct/${product.id}`}>
                         Edit product

@@ -11,7 +11,13 @@ import axios from "axios";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
-const Home = (props) => {
+const Home = ({
+  // currentUser,
+  showAdminBoard,
+  // cart,
+  // setCart,
+  handleAddToCart,
+}) => {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
@@ -33,7 +39,17 @@ const Home = (props) => {
       <header className="jumbotron">
         <h3>Products</h3>
       </header>
-      <Product handleAddToCart={props.handleAddToCart} />
+      <Product
+        // currentUser={currentUser}
+        showAdminBoard={showAdminBoard}
+        products={products}
+        setProducts={setProducts}
+        handleAddToCart={handleAddToCart}
+        page={page}
+        setPage={setPage}
+        maxPage={maxPage}
+        setMaxPage={setMaxPage}
+      />
     </>
   );
 };

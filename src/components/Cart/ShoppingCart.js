@@ -10,97 +10,79 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Col, Container, Row } from "react-bootstrap";
 
-const ShoppingCart = () => {
-  const [cart, setCart] = useState([]);
-  const [total, setTotal] = useState(0);
-
-  const { userId } = useParams();
-  // const user = AuthService.getCurrentUser();
-  const [user, setUser] = useState(null);
+const ShoppingCart = ({
+  show,
+  onHide,
+  user,
+  total,
+  fetchCart,
+  shoppingCart,
+  handleRemoveToCart,
+  handleUpdateTotalPrice,
+}) => {
   const username = user ? user.username : null;
+  const userId = user ? user.id : null;
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const currentUser = await AuthService.getCurrentUser();
-        setUser(currentUser);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchCurrentUser();
-  }, []);
-
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const response = await CartService.getCart(userId);
-        setCart(response.data.products);
-        setTotal(response.data.total);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchCart();
-  }, [userId]);
-
-  const handleRemoveToCart = async (productId) => {
-    try {
-      const response = await axios.delete(
-        `http://localhost:8080/api/user/${username}/cart`,
-        { data: { productId } }
-      );
-      const updatedCart = response.data;
-      setCart(updatedCart.products);
-      setTotal(response.data.total);
-    } catch (err) {
-      console.error(err);
+    if (show && user && !shoppingCart.length && !isLoading) {
+      setIsLoading(true);
+      fetchCart().finally(() => {
+        setIsLoading(false);
+      });
     }
-  };
+  }, [show, user, shoppingCart, isLoading, fetchCart]);
 
-  const handleUpdateTotalPrice = (deltaPrice) => {
-    setTotal(total + deltaPrice);
-  };
+  const [shouldFetchCart, setShouldFetchCart] = useState(false);
+  useEffect(() => {
+    if (shouldFetchCart) {
+      fetchCart();
+      setShouldFetchCart(false);
+    }
+  }, [fetchCart, shouldFetchCart]);
 
   return (
     <>
-      <Modal.Header>
-        <Modal.Title>Shopping Cart</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {cart && cart.length > 0 ? (
-          <Container>
-            {cart.map((item) => (
-              <Row key={item._id}>
-                <ItemList
-                  id={userId}
-                  name={item.product.name}
-                  link={item.product.link}
-                  price={item.product.price}
-                  quantity={item.quantity}
-                  productId={item.product._id}
-                  onRemoveFromCart={handleRemoveToCart}
-                  updateTotalPrice={handleUpdateTotalPrice}
-                />
-              </Row>
-            ))}
-          </Container>
-        ) : (
-          <p>Your shopping cart is empty</p>
-        )}
+      <Modal show={show} onHide={onHide} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Shopping Cart</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {shoppingCart && shoppingCart.length > 0 ? (
+            <Container>
+              {shoppingCart.map((item) => (
+                <Row key={item._id}>
+                  <ItemList
+                    id={userId}
+                    name={item.product.name}
+                    link={item.product.link}
+                    price={item.product.price}
+                    quantity={item.quantity}
+                    productId={item.product._id}
+                    onRemoveFromCart={handleRemoveToCart}
+                    updateTotalPrice={handleUpdateTotalPrice}
+                  />
+                </Row>
+              ))}
+            </Container>
+          ) : (
+            <p>Your shopping cart is empty</p>
+          )}
 
-        <p>Apply Discount Code</p>
-        <InputGroup className="mb-3">
-          <Form.Control placeholder="20OFF" />
-          <Button variant="outline-secondary" id="button-addon2">
-            Apply
-          </Button>
-        </InputGroup>
-        <h4>Subtotal: ${total}</h4>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="primary">Continue to checkout</Button>
-      </Modal.Footer>
+          <p>Apply Discount Code</p>
+          <InputGroup className="mb-3">
+            <Form.Control placeholder="20OFF" />
+            <Button variant="outline-secondary" id="button-addon2">
+              Apply
+            </Button>
+          </InputGroup>
+          <h4>Subtotal: ${total}</h4>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary">Continue to checkout</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
