@@ -128,8 +128,8 @@ const App = () => {
     try {
       const user = await AuthService.getCurrentUser();
       if (user) {
-        const username = user && user.username;
-        const response = await CartService.removeFromCart(username, productId);
+        const userId = user && user.id;
+        const response = await CartService.removeFromCart(userId, productId);
         const updatedCart = response.data;
         setShoppingCart(updatedCart.products);
         setTotal(response.data.total);

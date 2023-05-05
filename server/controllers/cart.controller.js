@@ -98,10 +98,9 @@ exports.addToCart = async (req, res) => {
 exports.removeFromCart = async (req, res) => {
   try {
     const { productId } = req.body;
-    const username = req.params.username;
-
+    const userId = req.params.userId;
     // Find the user by username and populate shoppingCart
-    const user = await User.findOne({ username: username }).populate({
+    const user = await User.findById(userId).populate({
       path: "shoppingCart",
       populate: {
         path: "products.product",

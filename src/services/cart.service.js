@@ -13,8 +13,8 @@ const addToCart = (userId, productId, quantity) => {
   });
 };
 
-const removeFromCart = (username, productId) => {
-  return axios.delete(API_URL + `${username}/cart`, { data: { productId } });
+const removeFromCart = (userId, productId) => {
+  return axios.delete(API_URL + `${userId}/cart`, { data: { productId } });
 };
 
 const updateCartQuantity = (id, productId, quantity) => {
