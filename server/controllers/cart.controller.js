@@ -10,12 +10,12 @@ exports.getCart = async (req, res) => {
       "products.product"
     );
 
-    const user = await User.findOne({ _id: userId });
-
     if (!userId) {
       return res.status(400).json({ message: "Missing user ID" });
     }
 
+    // const user = await User.findOne({ _id: userId });
+    const user = await User.findById(userId);
     if (!shoppingCart) {
       // If the user does not have a shopping cart, create one
       const newShoppingCart = new ShoppingCart({ user: userId });
@@ -88,7 +88,15 @@ exports.addToCart = async (req, res) => {
     await shoppingCart.save();
 
     // Return the updated shopping cart
-    res.json(shoppingCart);
+    // res.json(shoppingCart);
+
+    const newProduct = {
+      product,
+      quantity,
+    };
+
+    console.log(newProduct);
+    res.json(newProduct);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });

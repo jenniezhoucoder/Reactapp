@@ -3,7 +3,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
-import Modal from "../../common/modal";
+import Modal from "react-bootstrap/Modal";
 import { FORM } from "../../constants";
 
 import AuthService from "../../services/auth.service";
@@ -48,7 +48,7 @@ const vpassword = (value) => {
   }
 };
 
-const Register = () => {
+const Register = ({ show, onHide }) => {
   const form = useRef();
   const checkBtn = useRef();
 
@@ -103,9 +103,12 @@ const Register = () => {
   };
 
   return (
-    <div className="col-md-12">
-      <div className="card card-container">
-        <Modal buttonText={FORM.SIGNUP} titleText={FORM.SIGNUP_TITLE}>
+    <>
+      <Modal show={show} onHide={onHide} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>{FORM.SIGNUP_TITLE}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
           <Form onSubmit={handleRegister} ref={form}>
             {!successful && (
               <div>
@@ -167,9 +170,9 @@ const Register = () => {
             )}
             <CheckButton style={{ display: "none" }} ref={checkBtn} />
           </Form>
-        </Modal>
-      </div>
-    </div>
+        </Modal.Body>
+      </Modal>
+    </>
   );
 };
 

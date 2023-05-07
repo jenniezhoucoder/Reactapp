@@ -16,18 +16,18 @@ const MyModal = (props) => {
         </h2>
       </header>
 
-      <div
+      {/* <div
         className="modal show"
         style={{ display: "block", position: "initial" }}
-      >
-        <Modal.Dialog>
-          <Modal.Header>
-            <Modal.Title>{titleText}</Modal.Title>
-          </Modal.Header>
+      > */}
+      <Modal>
+        <Modal.Header>
+          <Modal.Title>{titleText}</Modal.Title>
+        </Modal.Header>
 
-          <Modal.Body>{children}</Modal.Body>
-        </Modal.Dialog>
-      </div>
+        <Modal.Body>{children}</Modal.Body>
+      </Modal>
+      {/* </div> */}
     </>
   );
 };

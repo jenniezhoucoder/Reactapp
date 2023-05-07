@@ -1,96 +1,47 @@
 import React, { useState, useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import axios from "axios";
+import CartService from "../../services/cart.service";
+import { connect } from "react-redux";
+import * as cart from "../../redux/actions/cartAction";
+import CartQtyButton from "../../common/quantitybutton";
 
-const CartItem = ({
-  id,
-  name,
-  link,
-  price,
-  quantity,
-  productId,
-  onRemoveFromCart,
-  updateTotalPrice,
-}) => {
-  const [newQuantity, setNewQuantity] = useState(quantity);
+const ItemList = ({ product, updateCartAction, removeProductAction }) => {
+  // useEffect(() => {}, [cart]);
+  const handleUpdateBtn = (action, product) => {
+    const updatedProduct = {
+      id: product.id,
+      link: product.link,
+      name: product.name,
+      price: product.price,
+      quantity: action === "plus" ? product.quantity + 1 : product.quantity - 1,
+    };
 
-  useEffect(() => {
-    setNewQuantity(quantity);
-  }, [quantity]);
-
-  const updateCartItemQuantity = async (id, productId, quantity) => {
-    try {
-      const response = await axios.post(
-        `http://localhost:8080/api/user/cart/${id}/cart`,
-        {
-          productId,
-          quantity,
-        }
-      );
-      return response.data;
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleInc = async (productId, newQuantity) => {
-    try {
-      await updateCartItemQuantity(id, productId, newQuantity + 1);
-      setNewQuantity(newQuantity + 1);
-      updateTotalPrice(price);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleDes = async (productId, newQuantity) => {
-    try {
-      if (newQuantity <= 1) {
-        setNewQuantity(1);
-        return;
-      }
-      await updateCartItemQuantity(id, productId, newQuantity - 1);
-      setNewQuantity(newQuantity - 1);
-      updateTotalPrice(-price);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleRemoveFromCart = async () => {
-    try {
-      await onRemoveFromCart(productId);
-    } catch (err) {
-      console.error(err);
-    }
+    if (updatedProduct.quantity > 0) return updateCartAction(updatedProduct);
+    if (updatedProduct.quantity < 1)
+      return removeProductAction(updatedProduct.id);
   };
 
   return (
     <>
       <Col>
-        <img src={link} style={{ maxWidth: "180px" }} />
+        <img src={product.link} style={{ maxWidth: "180px" }} />
       </Col>
       <Col>
-        <h4>{name}</h4>
-        <Row>
-          <Button
-            variant="light"
-            onClick={() => handleDes(productId, newQuantity)}
-          >
-            -
-          </Button>
-          <p>{newQuantity}</p>
-          <Button
-            variant="light"
-            onClick={() => handleInc(productId, newQuantity)}
-          >
-            +
-          </Button>
-        </Row>
+        <h4>{product.name}</h4>
+        <CartQtyButton
+          product={product}
+          cartQuantity={product.quantity}
+          handleUpdateBtn={handleUpdateBtn}
+        />
       </Col>
       <Col>
-        <h5>${price}</h5>
-        <Button variant="link" onClick={handleRemoveFromCart}>
+        <h5>${product.price}</h5>
+        <Button
+          variant="link"
+          type="button"
+          onClick={() => removeProductAction(product.id)}
+        >
           Remove
         </Button>
       </Col>
@@ -98,4 +49,19 @@ const CartItem = ({
   );
 };
 
-export default CartItem;
+// export default CartItem;
+
+const mapStateToProps = (state) => {
+  // const { product } = ownProps;
+  // const cartItem = state.cartReducer.cartItems.find(
+  //   (item) => item.id === product.id
+  // );
+  // return { product: cartItem };
+  // return { cart: state.cartReducer };
+  return { cartItems: state.cartReducer.cartItems };
+};
+
+export default connect(mapStateToProps, {
+  updateCartAction: cart.updateCartAction,
+  removeProductAction: cart.removeProductAction,
+})(ItemList);

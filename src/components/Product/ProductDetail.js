@@ -6,12 +6,29 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import AuthService from "../../services/auth.service";
 import ProductService from "../../services/product.service";
+import CartQtyButton from "../../common/quantitybutton";
+import {
+  addToCartAction,
+  updateCartAction,
+} from "../../redux/actions/cartAction";
+import * as cart from "../../redux/actions/cartAction";
+import { connect } from "react-redux";
 
-function ProductDetail() {
+function ProductDetail({
+  addToCartAction,
+  updateCartAction,
+  cart,
+  showAdminBoard,
+}) {
   const [product, setProduct] = useState(null);
   const { id } = useParams();
-  const [currentUser, setCurrentUser] = useState(null);
-  const [cart, setCart] = useState([]);
+  // const [currentUser, setCurrentUser] = useState(null);
+  // const [cart, setCart] = useState([]);
+  useEffect(() => {}, [cart]);
+  // const showAdminBoard = AuthService.isAdmin();
+  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+  const cartQuantity =
+    cartItems?.filter((item) => item.id === product?._id)[0]?.quantity || 1;
 
   useEffect(() => {
     ProductService.getProductDetail(id)
@@ -23,58 +40,34 @@ function ProductDetail() {
       });
   }, [id]);
 
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const user = await AuthService.getCurrentUser();
-        setCurrentUser(user);
-      } catch (error) {
-        console.log(error);
-      }
+  const handleAddToCart = (product) => {
+    const productCart = {
+      id: product?._id,
+      name: product?.name,
+      price: product?.price,
+      quantity: cartQuantity,
+      link: product?.link,
     };
-    fetchCurrentUser();
-  }, []);
-
-  const handleAddToCart = async (productId, quantity) => {
-    try {
-      let response;
-      //user login
-      if (currentUser) {
-        const userId = currentUser && currentUser.id;
-        response = await axios.post(
-          `http://localhost:8080/api/user/${userId}/cart`,
-          {
-            productId: productId,
-            quantity: quantity,
-          }
-        );
-      } else {
-        //user not login
-        const cartItemsFromLocalStorage = JSON.parse(
-          localStorage.getItem("cart") || "[]"
-        );
-        const existingCartItem = cartItemsFromLocalStorage.find(
-          (item) => item.productId === productId
-        );
-
-        if (existingCartItem) {
-          existingCartItem.quantity += 1;
-        } else {
-          const newCartItem = {
-            productId: productId,
-            quantity: 1,
-          };
-          cartItemsFromLocalStorage.push(newCartItem);
-        }
-
-        localStorage.setItem("cart", JSON.stringify(cartItemsFromLocalStorage));
-        setCart(cartItemsFromLocalStorage);
-      }
-      console.log(productId);
-    } catch (err) {
-      console.error(err);
-    }
+    addToCartAction(productCart);
   };
+
+  const handleUpdateBtn = (action, product) => {
+    const updatedProduct = {
+      id: product._id,
+      link: product.link,
+      name: product.name,
+      price: product.price,
+      quantity: action === "plus" ? cartQuantity + 1 : cartQuantity - 1,
+    };
+
+    if (updatedProduct.quantity < 1) return;
+
+    if (cartItems?.filter((item) => item.id === product?._id).length === 0)
+      return addToCartAction(updatedProduct);
+
+    updateCartAction(updatedProduct);
+  };
+
   if (!product) {
     return <div>Loading...</div>;
   }
@@ -82,7 +75,7 @@ function ProductDetail() {
   return (
     <>
       <div className="p-5 flex row justify-content-center">
-        <Card>
+        <Card style={{ minHeight: "600px" }}>
           <Row>
             <Col md={4}>
               <Card.Img variant="top" src={product.link} />
@@ -93,15 +86,20 @@ function ProductDetail() {
                 <Card.Title>{product.name}</Card.Title>
                 <Card.Text>${product.price}</Card.Text>
                 <Card.Text>{product.description}</Card.Text>
-                <Button
-                  variant="primary"
-                  onClick={() => handleAddToCart(product._id, 1)}
-                >
+                <CartQtyButton
+                  product={product}
+                  cartQuantity={cartQuantity}
+                  handleUpdateBtn={handleUpdateBtn}
+                />
+                <Button variant="primary" onClick={handleAddToCart}>
                   Add to cart
                 </Button>
-                {/* <Button variant="light">
-              <Link to={`/editproduct/${product.id}`}>Edit product</Link>
-            </Button> */}
+                {showAdminBoard && (
+                  <Button variant="light">
+                    <Link to={`/editproduct/${product.id}`}>Edit product</Link>
+                  </Button>
+                )}
+
                 <Card.Text style={{ color: "grey" }}>
                   In Stock: {product.quantity}
                 </Card.Text>
@@ -114,4 +112,11 @@ function ProductDetail() {
   );
 }
 
-export default ProductDetail;
+// export default ProductDetail;
+const mapStateToProps = (state) => {
+  return { cart: state.cartReducer };
+};
+
+export default connect(mapStateToProps, { addToCartAction, updateCartAction })(
+  ProductDetail
+);

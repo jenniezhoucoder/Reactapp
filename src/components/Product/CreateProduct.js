@@ -52,75 +52,79 @@ const CreateProduct = () => {
   };
 
   return (
-    <form className="p-5" onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="name">Product Name</label>
-        <input
-          type="text"
-          className="form-control"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="description">Product Description</label>
-        <input
-          type="text"
-          className="form-control"
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="category">Category</label>
-        <input
-          type="text"
-          className="form-control"
-          id="category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="price">Price</label>
-        <input
-          type="text"
-          className="form-control"
-          id="price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="quantity">In Stock Quantity</label>
-        <input
-          type="text"
-          className="form-control"
-          id="quantity"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="link">Add Image Link</label>
-        <input
-          type="text"
-          className="form-control"
-          id="link"
-          value={link}
-          onChange={(e) => setLink(e.target.value)}
-        />
-      </div>
-      <Button type="submit">Add Product</Button>
+    <>
+      <div className="container p-5">
+        <form className="p-5" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="name">Product Name</label>
+            <input
+              type="text"
+              className="form-control"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="description">Product Description</label>
+            <input
+              type="text"
+              className="form-control"
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="category">Category</label>
+            <input
+              type="text"
+              className="form-control"
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="price">Price</label>
+            <input
+              type="text"
+              className="form-control"
+              id="price"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="quantity">In Stock Quantity</label>
+            <input
+              type="text"
+              className="form-control"
+              id="quantity"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="link">Add Image Link</label>
+            <input
+              type="text"
+              className="form-control"
+              id="link"
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+            />
+          </div>
+          <Button type="submit">Add Product</Button>
 
-      {errorMessage.map((error, index) => (
-        <div key={index} className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      ))}
-    </form>
+          {errorMessage.map((error, index) => (
+            <div key={index} className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          ))}
+        </form>
+      </div>
+    </>
   );
 };
 

@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import Modal from "../../common/modal";
+import { Modal } from "react-bootstrap";
 import { FORM } from "../../constants";
 import { isEmail } from "validator";
 import AuthService from "../../services/auth.service";
@@ -28,7 +28,7 @@ const validEmail = (value) => {
   }
 };
 
-const ForgotPassword = () => {
+const ForgotPassword = ({ show, onHide }) => {
   const form = useRef();
   const checkBtn = useRef();
 
@@ -50,58 +50,54 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="col-md-12">
-      <div className="card card-container">
-        <Modal
-          buttonText="update password!"
-          titleText={FORM.FORGOT_PASSWORD_TITLE}
-        >
-          <Form onSubmit={handleUpdate} ref={form}>
-            <div className="form-group">
-              <label htmlFor="email">{FORM.EMAIL.LABLE}</label>
-              <Input
-                type="text"
-                className="form-control"
-                name="email"
-                value={email}
-                onChange={onChangeEmail}
-                validations={[required, validEmail]}
-              />
-            </div>
+    // <Modal
+    // buttonText="update password!"
+    // titleText={FORM.FORGOT_PASSWORD_TITLE}
+    // show={show}
+    // onHide={onHide}
+    // >
+    <>
+      <Modal.Header closeButton>
+        <Modal.Title>{FORM.FORGOT_PASSWORD_TITLE}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={handleUpdate} ref={form}>
+          <div className="form-group">
+            <label htmlFor="email">{FORM.EMAIL.LABLE}</label>
+            <Input
+              type="text"
+              className="form-control"
+              name="email"
+              value={email}
+              onChange={onChangeEmail}
+              validations={[required, validEmail]}
+            />
+          </div>
 
-            <div className="form-group">
-              <button
-                className="btn btn-primary btn-block"
-                // onClick={() => setShowPassword(true)}
-                type="submit"
-              >
-                {FORM.UPDATE_PASS_BUTTON}
-              </button>
-            </div>
+          <div className="form-group">
+            <button
+              className="btn btn-primary btn-block"
+              // onClick={() => setShowPassword(true)}
+              type="submit"
+            >
+              {FORM.UPDATE_PASS_BUTTON}
+            </button>
+          </div>
 
-            {/* {showPassword && <UpdateContent />} */}
-            <CheckButton style={{ display: "none" }} ref={checkBtn} />
+          {/* {showPassword && <UpdateContent />} */}
+          <CheckButton style={{ display: "none" }} ref={checkBtn} />
 
-            {status === "success" && (
-              <p>
-                We have sent the update password link to your emial, please
-                check that ！
-              </p>
-            )}
-            {status === "error" && <p>Password reset failed.</p>}
-          </Form>
-        </Modal>
-      </div>
-    </div>
+          {status === "success" && (
+            <p>
+              We have sent the update password link to your emial, please check
+              that ！
+            </p>
+          )}
+          {status === "error" && <p>Password reset failed.</p>}
+        </Form>
+      </Modal.Body>
+    </>
   );
 };
-
-// const UpdateContent = () => {
-//   return (
-//     <>
-//       <p>send email successfully</p>
-//     </>
-//   );
-// };
 
 export default ForgotPassword;

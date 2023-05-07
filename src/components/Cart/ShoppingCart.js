@@ -9,38 +9,20 @@ import ItemList from "./ItemList";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Col, Container, Row } from "react-bootstrap";
+import { connect } from "react-redux";
+import * as cart from "../../redux/actions/cartAction";
+import { useSelector } from "react-redux";
 
-const ShoppingCart = ({
-  show,
-  onHide,
-  user,
-  total,
-  fetchCart,
-  shoppingCart,
-  handleRemoveToCart,
-  handleUpdateTotalPrice,
-}) => {
-  const username = user ? user.username : null;
-  const userId = user ? user.id : null;
+const ShoppingCart = ({ show, onHide }) => {
+  const products = JSON.parse(localStorage.getItem("cartItems")) || [];
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [shouldFetchCart, setShouldFetchCart] = useState(false);
-
-  useEffect(() => {
-    if (show && user && !shoppingCart.length && !isLoading) {
-      setIsLoading(true);
-      fetchCart().finally(() => {
-        setIsLoading(false);
-      });
-    }
-  }, [show, user, shoppingCart, isLoading, fetchCart]);
-
-  useEffect(() => {
-    if (shouldFetchCart) {
-      fetchCart();
-      setShouldFetchCart(false);
-    }
-  }, [fetchCart, shouldFetchCart]);
+  const calVal = (products) => {
+    const total = products
+      ?.map((item) => item.price * item.quantity)
+      ?.reduce((total, num) => total + Math.round(num), 0);
+    return total;
+  };
+  const total = calVal(products);
 
   return (
     <>
@@ -49,20 +31,11 @@ const ShoppingCart = ({
           <Modal.Title>Shopping Cart</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {shoppingCart && shoppingCart.length > 0 ? (
+          {products && products.length > 0 ? (
             <Container>
-              {shoppingCart.map((item) => (
-                <Row key={item._id}>
-                  <ItemList
-                    id={userId}
-                    name={item.product.name}
-                    link={item.product.link}
-                    price={item.product.price}
-                    quantity={item.quantity}
-                    productId={item.product._id}
-                    onRemoveFromCart={handleRemoveToCart}
-                    updateTotalPrice={handleUpdateTotalPrice}
-                  />
+              {products.map((product) => (
+                <Row key={product.id}>
+                  <ItemList product={product} />
                 </Row>
               ))}
             </Container>
@@ -87,4 +60,13 @@ const ShoppingCart = ({
   );
 };
 
-export default ShoppingCart;
+// export default ShoppingCart;
+
+const mapStateToProps = (state) => {
+  return { cart: state.cartReducer };
+};
+
+export default connect(mapStateToProps, {
+  updateCartAction: cart.updateCartAction,
+  removeProductAction: cart.removeProductAction,
+})(ShoppingCart);

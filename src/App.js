@@ -23,14 +23,15 @@ import ProductDetail from "./components/Product/ProductDetail";
 import EditProduct from "./components/Product/EditProduct";
 import ShoppingCart from "./components/Cart/ShoppingCart";
 import TempCart from "./components/Cart/TempCart";
+import Footer from "./common/footer";
+import { useSelector } from "react-redux";
 
 const App = () => {
   const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
-  const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
-  const [total, setTotal] = useState(0);
-  const [shoppingCart, setShoppingCart] = useState([]);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -43,107 +44,22 @@ const App = () => {
     fetchData();
   }, []);
 
-  const handleAddToCart = async (productId, quantity) => {
-    try {
-      let response;
-      const user = await AuthService.getCurrentUser();
-      //user login
-      if (user) {
-        const userId = user && user.id;
-        response = await CartService.addToCart(userId, productId, quantity);
-      } else {
-        //user not login
-        const cartItemsFromLocalStorage = JSON.parse(
-          localStorage.getItem("cart") || "[]"
-        );
-        const existingCartItem = cartItemsFromLocalStorage.find(
-          (item) => item.productId === productId
-        );
+  // const cartItems = useSelector((state) => state.cartReducer.cartItems);
+  // console.log(cartItems);
 
-        if (existingCartItem) {
-          existingCartItem.quantity += 1;
-        } else {
-          const newCartItem = {
-            productId: productId,
-            quantity: 1,
-          };
-          cartItemsFromLocalStorage.push(newCartItem);
-        }
-
-        localStorage.setItem("cart", JSON.stringify(cartItemsFromLocalStorage));
-        setCart(cartItemsFromLocalStorage);
-      }
-      fetchCart();
-      console.log("productId" + productId);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // shopping cart
-  const fetchCart = async () => {
-    try {
-      const response = await CartService.getCart(currentUser.id);
-      setShoppingCart(response.data.products);
-      setTotal(response.data.total);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // const fetchCart = async () => {
-  //   try {
-  //     const user = AuthService.getCurrentUser();
-  //     let cartItem = [];
-  //     const tempCart = JSON.parse(localStorage.getItem("cart")) || [];
-  //     if (tempCart.length > 0) {
-  //       tempCart.forEach((item) => {
-  //         cartItem.push({ product: item, quantity: item.quantity });
-  //       });
-  //     }
-  //     //if user is logined in
-  //     if (user) {
-  //       const response = await CartService.getCart(user.id);
-  //       if (response.data.length > 0) {
-  //         response.data.forEach((item) => {
-  //           const index = cartItem.findIndex(
-  //             (cartItem) => cartItem.product._id == item.product._id
-  //           );
-
-  //           if (index > 0) {
-  //             cartItem[index].quantity += item.quantity;
-  //           } else {
-  //             cartItem.push(item);
-  //           }
-  //         });
-  //       }
-  //     }
-  //     setShoppingCart(cartItem);
-  //   } catch (err) {
-  //     console.error(err);
+  // const calVal = (cartItems) => {
+  //   if (!Array.isArray(cartItems)) {
+  //     return 0;
   //   }
+  //   const totalPrice = cartItems.reduce(
+  //     (total, item) => total + item.price * item.quantity,
+  //     0
+  //   );
+  //   return totalPrice.toFixed(2);
   // };
+  // const totalPrice = calVal(cartItems);
+  // console.log(totalPrice);
 
-  const handleRemoveToCart = async (productId) => {
-    try {
-      const user = await AuthService.getCurrentUser();
-      if (user) {
-        const userId = user && user.id;
-        const response = await CartService.removeFromCart(userId, productId);
-        const updatedCart = response.data;
-        setShoppingCart(updatedCart.products);
-        setTotal(response.data.total);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleUpdateTotalPrice = (deltaPrice) => {
-    setTotal(total + deltaPrice);
-  };
-
-  //logout
   const logOut = () => {
     AuthService.logout();
   };
@@ -179,56 +95,62 @@ const App = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <a href="/login" className="nav-link" onClick={logOut}>
+                <a href="/home" className="nav-link" onClick={logOut}>
                   Logout
                 </a>
               </li>
+            </div>
+          ) : (
+            <div className="navbar-nav ml-auto">
               <Button
                 type="button"
                 variant="link"
                 onClick={() => {
-                  setShowCart(true);
+                  setShowLogin(true);
                 }}
               >
-                <i className="bi bi-cart"></i>
+                <i className="bi bi-person"></i>
               </Button>
-              <Button variant="link">${total}</Button>
-            </div>
-          ) : (
-            <div className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link to={"/login"} className="nav-link">
-                  <i className="bi bi-person"></i>
-                </Link>
-              </li>
 
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link to={"/register"} className="nav-link">
                   Register
                 </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link to={"/tempcart"} className="nav-link">
-                  <i className="bi bi-cart"></i>
-                </Link>
-              </li>
+              </li> */}
+              <Button
+                type="button"
+                variant="link"
+                onClick={() => {
+                  setShowRegister(true);
+                }}
+              >
+                Register
+              </Button>
             </div>
           )}
+
+          <Button
+            type="button"
+            variant="link"
+            onClick={() => {
+              setShowCart(true);
+            }}
+          >
+            <i className="bi bi-cart"></i>
+          </Button>
         </nav>
       </div>
 
       <div className="container mt-3">
-        <ShoppingCart
-          show={showCart}
-          onHide={() => setShowCart(false)}
-          user={currentUser}
-          total={total}
-          shoppingCart={shoppingCart}
-          fetchCart={fetchCart}
-          handleRemoveToCart={handleRemoveToCart}
-          handleUpdateTotalPrice={handleUpdateTotalPrice}
-        />
+        <ShoppingCart show={showCart} onHide={() => setShowCart(false)} />
+      </div>
+
+      <div className="container mt-3">
+        <Login show={showLogin} onHide={() => setShowLogin(false)} />
+      </div>
+
+      <div className="container mt-3">
+        <Register show={showRegister} onHide={() => setShowRegister(false)} />
       </div>
 
       <div className="container mt-3">
@@ -236,47 +158,21 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route
             path="/home"
-            element={
-              <Home
-                // currentUser={currentUser}
-                showAdminBoard={showAdminBoard}
-                // cart={cart}
-                // setCart={setCart}
-                handleAddToCart={handleAddToCart}
-              />
-            }
+            element={<Home showAdminBoard={showAdminBoard} />}
           />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
-          {/* <Route path="/user" element={<BoardUser />} /> */}
           <Route path="/admin" element={<BoardAdmin />} />
           <Route path="/updatepassword" element={<ForgotPassword />} />
           <Route path="/addproduct" element={<CreateProduct />} />
-          <Route path="/user/:id" element={<ProductDetail />} />
+          <Route
+            path="/user/:id"
+            element={<ProductDetail showAdminBoard={showAdminBoard} />}
+          />
           <Route path="/editproduct/:id" element={<EditProduct />} />
-          <Route path="/tempcart" element={<TempCart />} />
         </Routes>
       </div>
 
-      <div>
-        <footer className="text-center text-lg-start bg-dark text-muted">
-          <section>
-            <a className="btn btn-outline-light btn-floating m-1" role="button">
-              <i className="bi bi-twitter"></i>
-            </a>
-
-            <a className="btn btn-outline-light btn-floating m-1" role="button">
-              <i className="bi bi-facebook"></i>
-            </a>
-
-            <a className="btn btn-outline-light btn-floating m-1" role="button">
-              <i className="bi bi-youtube"></i>
-            </a>
-          </section>
-          <div className="text-center p-2">© 2023 Copyright: Reserved</div>
-        </footer>
-      </div>
+      <Footer />
     </>
   );
 };
