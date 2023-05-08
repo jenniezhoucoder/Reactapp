@@ -7,7 +7,7 @@ import * as cart from "../../redux/actions/cartAction";
 import CartQtyButton from "../../common/quantitybutton";
 
 const ItemList = ({ product, updateCartAction, removeProductAction }) => {
-  // useEffect(() => {}, [cart]);
+  useEffect(() => {}, [cart]);
   const handleUpdateBtn = (action, product) => {
     const updatedProduct = {
       id: product.id,
@@ -19,7 +19,8 @@ const ItemList = ({ product, updateCartAction, removeProductAction }) => {
 
     if (updatedProduct.quantity > 0) return updateCartAction(updatedProduct);
     if (updatedProduct.quantity < 1)
-      return removeProductAction(updatedProduct.id);
+      // return removeProductAction(updatedProduct.id);
+      return;
   };
 
   return (
@@ -40,7 +41,7 @@ const ItemList = ({ product, updateCartAction, removeProductAction }) => {
         <Button
           variant="link"
           type="button"
-          onClick={() => removeProductAction(product.id)}
+          onClick={() => removeProductAction(product)}
         >
           Remove
         </Button>
@@ -49,16 +50,8 @@ const ItemList = ({ product, updateCartAction, removeProductAction }) => {
   );
 };
 
-// export default CartItem;
-
 const mapStateToProps = (state) => {
-  // const { product } = ownProps;
-  // const cartItem = state.cartReducer.cartItems.find(
-  //   (item) => item.id === product.id
-  // );
-  // return { product: cartItem };
-  // return { cart: state.cartReducer };
-  return { cartItems: state.cartReducer.cartItems };
+  return { cart: state.cartReducer };
 };
 
 export default connect(mapStateToProps, {

@@ -21,14 +21,19 @@ const EditProductPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    ProductService.editProduct(id).then((response) => {
-      setProduct(response.data);
-    });
+    // ProductService.getProductDetail(id)
+    axios
+      .get(`http://localhost:8080/api/test/editproduct/${id}`)
+      .then((response) => {
+        setProduct(response.data);
+      });
   }, [id]);
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    ProductService.updateProduct(id, product)
+    // ProductService.updateProduct(id, product)
+    axios
+      .put(`http://localhost:8080/api/test/editproduct/${id}`, product)
       .then(() => {
         alert("Product updated successfully");
       })

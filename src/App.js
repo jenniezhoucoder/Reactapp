@@ -44,21 +44,11 @@ const App = () => {
     fetchData();
   }, []);
 
-  // const cartItems = useSelector((state) => state.cartReducer.cartItems);
-  // console.log(cartItems);
+  const cart = useSelector((state) => state.cartReducer);
+  const { cartItems, total } = cart;
 
-  // const calVal = (cartItems) => {
-  //   if (!Array.isArray(cartItems)) {
-  //     return 0;
-  //   }
-  //   const totalPrice = cartItems.reduce(
-  //     (total, item) => total + item.price * item.quantity,
-  //     0
-  //   );
-  //   return totalPrice.toFixed(2);
-  // };
-  // const totalPrice = calVal(cartItems);
-  // console.log(totalPrice);
+  console.log(total);
+  console.log(cartItems);
 
   const logOut = () => {
     AuthService.logout();
@@ -89,43 +79,45 @@ const App = () => {
 
           {currentUser ? (
             <div className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link to={"/profile"} className="nav-link">
-                  {currentUser.username}
-                </Link>
-              </li>
-              <li className="nav-item">
-                <a href="/home" className="nav-link" onClick={logOut}>
-                  Logout
-                </a>
-              </li>
+              <ul className="navbar-nav mr-auto">
+                <li className="nav-item">
+                  <Link to={"/profile"} className="nav-link">
+                    {currentUser.username}
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <a href="/home" className="nav-link" onClick={logOut}>
+                    Logout
+                  </a>
+                </li>
+              </ul>
             </div>
           ) : (
             <div className="navbar-nav ml-auto">
-              <Button
-                type="button"
-                variant="link"
-                onClick={() => {
-                  setShowLogin(true);
-                }}
-              >
-                <i className="bi bi-person"></i>
-              </Button>
-
-              {/* <li className="nav-item">
-                <Link to={"/register"} className="nav-link">
-                  Register
-                </Link>
-              </li> */}
-              <Button
-                type="button"
-                variant="link"
-                onClick={() => {
-                  setShowRegister(true);
-                }}
-              >
-                Register
-              </Button>
+              <ul className="navbar-nav mr-auto">
+                <li className="nav-item">
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => {
+                      setShowLogin(true);
+                    }}
+                  >
+                    <i className="bi bi-person"></i>
+                  </Button>
+                </li>
+                <li className="nav-item">
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => {
+                      setShowRegister(true);
+                    }}
+                  >
+                    Register
+                  </Button>
+                </li>
+              </ul>
             </div>
           )}
 
@@ -138,6 +130,8 @@ const App = () => {
           >
             <i className="bi bi-cart"></i>
           </Button>
+
+          <span style={{ color: "white" }}>${total}</span>
         </nav>
       </div>
 

@@ -13,6 +13,7 @@ import {
 } from "../../redux/actions/cartAction";
 import * as cart from "../../redux/actions/cartAction";
 import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 
 function ProductDetail({
   addToCartAction,
@@ -22,10 +23,7 @@ function ProductDetail({
 }) {
   const [product, setProduct] = useState(null);
   const { id } = useParams();
-  // const [currentUser, setCurrentUser] = useState(null);
-  // const [cart, setCart] = useState([]);
   useEffect(() => {}, [cart]);
-  // const showAdminBoard = AuthService.isAdmin();
   const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
   const cartQuantity =
     cartItems?.filter((item) => item.id === product?._id)[0]?.quantity || 1;

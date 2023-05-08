@@ -34,6 +34,7 @@ exports.editProduct = async (req, res) => {
       updates,
       options
     );
+
     res.send(updatedProduct);
   } catch (err) {
     console.error(err);

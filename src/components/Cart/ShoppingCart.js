@@ -14,7 +14,10 @@ import * as cart from "../../redux/actions/cartAction";
 import { useSelector } from "react-redux";
 
 const ShoppingCart = ({ show, onHide }) => {
-  const products = JSON.parse(localStorage.getItem("cartItems")) || [];
+  // const products = JSON.parse(localStorage.getItem("cartItems")) || [];
+  const products = useSelector((state) => state.cartReducer.cartItems);
+  // const { products } = cart;
+  useEffect(() => {}, [cart]);
 
   const calVal = (products) => {
     const total = products
@@ -65,6 +68,9 @@ const ShoppingCart = ({ show, onHide }) => {
 const mapStateToProps = (state) => {
   return { cart: state.cartReducer };
 };
+// const mapStateToProps = (state) => {
+//   return { cartItems: state.cartReducer.cartItems };
+// };
 
 export default connect(mapStateToProps, {
   updateCartAction: cart.updateCartAction,

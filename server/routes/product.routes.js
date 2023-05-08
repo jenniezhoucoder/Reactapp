@@ -22,6 +22,6 @@ module.exports = function (app) {
   //edit product
   app.get("/api/test/editproduct/:id", controller.editProduct);
 
-  //update product
+  // //update product
   app.put("/api/test/editproduct/:id", controller.editProduct);
 };
