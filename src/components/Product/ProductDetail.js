@@ -26,7 +26,7 @@ function ProductDetail({
   useEffect(() => {}, [cart]);
   const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
   const cartQuantity =
-    cartItems?.filter((item) => item.id === product?._id)[0]?.quantity || 1;
+    cartItems?.filter((item) => item.id === product?._id)[0]?.quantity || 0;
 
   useEffect(() => {
     ProductService.getProductDetail(id)
@@ -38,12 +38,14 @@ function ProductDetail({
       });
   }, [id]);
 
+  // console.log(product);
+
   const handleAddToCart = (product) => {
     const productCart = {
       id: product?._id,
       name: product?.name,
       price: product?.price,
-      quantity: cartQuantity,
+      quantity: 1,
       link: product?.link,
     };
     addToCartAction(productCart);
@@ -84,23 +86,30 @@ function ProductDetail({
                 <Card.Title>{product.name}</Card.Title>
                 <Card.Text>${product.price}</Card.Text>
                 <Card.Text>{product.description}</Card.Text>
-                <CartQtyButton
-                  product={product}
-                  cartQuantity={cartQuantity}
-                  handleUpdateBtn={handleUpdateBtn}
-                />
-                <Button variant="primary" onClick={handleAddToCart}>
-                  Add to cart
-                </Button>
+                {cartQuantity < 1 ? (
+                  <Button
+                    variant="primary"
+                    onClick={() => handleAddToCart(product)}
+                  >
+                    Add to cart
+                  </Button>
+                ) : (
+                  <CartQtyButton
+                    product={product}
+                    cartQuantity={cartQuantity}
+                    handleUpdateBtn={handleUpdateBtn}
+                  />
+                )}
+
                 {showAdminBoard && (
                   <Button variant="light">
                     <Link to={`/editproduct/${product.id}`}>Edit product</Link>
                   </Button>
                 )}
 
-                <Card.Text style={{ color: "grey" }}>
+                {/* <Card.Text style={{ color: "grey" }}>
                   In Stock: {product.quantity}
-                </Card.Text>
+                </Card.Text> */}
               </Card.Body>
             </Col>
           </Row>

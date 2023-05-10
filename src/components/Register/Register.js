@@ -5,6 +5,7 @@ import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
 import Modal from "react-bootstrap/Modal";
 import { FORM } from "../../constants";
+import { Button } from "react-bootstrap";
 
 import AuthService from "../../services/auth.service";
 
@@ -48,7 +49,7 @@ const vpassword = (value) => {
   }
 };
 
-const Register = ({ show, onHide }) => {
+const Register = ({ mode, handleMode }) => {
   const form = useRef();
   const checkBtn = useRef();
 
@@ -104,74 +105,76 @@ const Register = ({ show, onHide }) => {
 
   return (
     <>
-      <Modal show={show} onHide={onHide} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>{FORM.SIGNUP_TITLE}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleRegister} ref={form}>
-            {!successful && (
-              <div>
-                <div className="form-group">
-                  <label htmlFor="username">{FORM.EMAIL.USERNAME}</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="username"
-                    value={username}
-                    onChange={onChangeUsername}
-                    validations={[required, vusername]}
-                  />
-                </div>
+      <Form onSubmit={handleRegister} ref={form}>
+        {!successful && (
+          <div>
+            <div className="form-group">
+              <label htmlFor="username">{FORM.EMAIL.USERNAME}</label>
+              <Input
+                type="text"
+                className="form-control"
+                name="username"
+                value={username}
+                onChange={onChangeUsername}
+                validations={[required, vusername]}
+              />
+            </div>
 
-                <div className="form-group">
-                  <label htmlFor="email">{FORM.EMAIL.LABLE}</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="email"
-                    value={email}
-                    onChange={onChangeEmail}
-                    validations={[required, validEmail]}
-                  />
-                </div>
+            <div className="form-group">
+              <label htmlFor="email">{FORM.EMAIL.LABLE}</label>
+              <Input
+                type="text"
+                className="form-control"
+                name="email"
+                value={email}
+                onChange={onChangeEmail}
+                validations={[required, validEmail]}
+              />
+            </div>
 
-                <div className="form-group">
-                  <label htmlFor="password">{FORM.EMAIL.PASSWORD}</label>
-                  <Input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    value={password}
-                    onChange={onChangePassword}
-                    validations={[required, vpassword]}
-                  />
-                </div>
+            <div className="form-group">
+              <label htmlFor="password">{FORM.EMAIL.PASSWORD}</label>
+              <Input
+                type="password"
+                className="form-control"
+                name="password"
+                value={password}
+                onChange={onChangePassword}
+                validations={[required, vpassword]}
+              />
+            </div>
 
-                <div className="form-group">
-                  <button className="btn btn-primary btn-block">
-                    {FORM.SIGNUP_BUTTON}
-                  </button>
-                </div>
-              </div>
-            )}
+            <div className="form-group">
+              <button className="btn btn-primary btn-block">
+                {FORM.SIGNUP_BUTTON}
+              </button>
+            </div>
+          </div>
+        )}
 
-            {message && (
-              <div className="form-group">
-                <div
-                  className={
-                    successful ? "alert alert-success" : "alert alert-danger"
-                  }
-                  role="alert"
-                >
-                  {message}
-                </div>
-              </div>
-            )}
-            <CheckButton style={{ display: "none" }} ref={checkBtn} />
-          </Form>
-        </Modal.Body>
-      </Modal>
+        {message && (
+          <div className="form-group">
+            <div
+              className={
+                successful ? "alert alert-success" : "alert alert-danger"
+              }
+              role="alert"
+            >
+              {message}
+            </div>
+          </div>
+        )}
+        <CheckButton style={{ display: "none" }} ref={checkBtn} />
+      </Form>
+
+      <div className="flex row justify-content-between px-3">
+        <div className="">
+          <span>Already have an account?</span>
+          <Button variant="link" onClick={() => handleMode("signin")}>
+            Signin
+          </Button>
+        </div>
+      </div>
     </>
   );
 };

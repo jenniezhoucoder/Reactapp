@@ -22,7 +22,7 @@ const required = (value) => {
   }
 };
 
-const Login = ({ show, onHide }) => {
+const Login = ({ mode, handleMode }) => {
   let navigate = useNavigate();
 
   const form = useRef();
@@ -32,15 +32,19 @@ const Login = ({ show, onHide }) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [showFPass, setShowFPass] = useState(false);
+  // const [showFPass, setShowFPass] = useState(false);
+  // const [mode, setMode] = useState("signin");
+  // const handleMode = (newMode) => {
+  //   setMode(newMode);
+  // };
 
-  const handleForgotPassword = () => {
-    setShowFPass(true);
-  };
+  // const handleForgotPassword = () => {
+  //   setShowFPass(true);
+  // };
 
-  const handleLoginAccount = () => {
-    setShowFPass(false);
-  };
+  // const handleLoginAccount = () => {
+  //   setShowFPass(false);
+  // };
 
   const onChangeUsername = (e) => {
     const username = e.target.value;
@@ -105,81 +109,65 @@ const Login = ({ show, onHide }) => {
 
   return (
     <>
-      <Modal show={show} onHide={onHide} size="lg">
-        {showFPass ? (
-          <ForgotPassWord show={showFPass} onHide={setShowFPass} />
-        ) : (
-          <>
-            <Modal.Header closeButton>
-              <Modal.Title>{FORM.LOGIN_TITLE}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form onSubmit={handleLogin} ref={form}>
-                <div className="form-group">
-                  <label htmlFor="username">{FORM.EMAIL.USERNAME}</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="username"
-                    value={username}
-                    onChange={onChangeUsername}
-                    validations={[required]}
-                  />
-                </div>
+      <Form onSubmit={handleLogin} ref={form}>
+        <div className="form-group">
+          <label htmlFor="username">{FORM.EMAIL.USERNAME}</label>
+          <Input
+            type="text"
+            className="form-control"
+            name="username"
+            value={username}
+            onChange={onChangeUsername}
+            validations={[required]}
+          />
+        </div>
 
-                <div className="form-group">
-                  <label htmlFor="password">{FORM.EMAIL.PASSWORD}</label>
-                  <Input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    value={password}
-                    onChange={onChangePassword}
-                    validations={[required]}
-                  />
-                </div>
+        <div className="form-group">
+          <label htmlFor="password">{FORM.EMAIL.PASSWORD}</label>
+          <Input
+            type="password"
+            className="form-control"
+            name="password"
+            value={password}
+            onChange={onChangePassword}
+            validations={[required]}
+          />
+        </div>
 
-                <div className="form-group">
-                  <button
-                    className="btn btn-primary btn-block"
-                    disabled={loading}
-                  >
-                    {loading && (
-                      <span className="spinner-border spinner-border-sm"></span>
-                    )}
-                    <span>{FORM.LOGIN_BUTTON}</span>
-                  </button>
-                </div>
+        <div className="form-group">
+          <button className="btn btn-primary btn-block" disabled={loading}>
+            {loading && (
+              <span className="spinner-border spinner-border-sm"></span>
+            )}
+            <span>{FORM.LOGIN_BUTTON}</span>
+          </button>
+        </div>
 
-                {message && (
-                  <div className="form-group">
-                    <div className="alert alert-danger" role="alert">
-                      {message}
-                    </div>
-                  </div>
-                )}
-                <CheckButton style={{ display: "none" }} ref={checkBtn} />
-              </Form>
-            </Modal.Body>
-          </>
+        {message && (
+          <div className="form-group">
+            <div className="alert alert-danger" role="alert">
+              {message}
+            </div>
+          </div>
         )}
+        <CheckButton style={{ display: "none" }} ref={checkBtn} />
+      </Form>
 
-        <Modal.Footer>
-          {showFPass ? (
-            <>
-              <Button variant="link" onClick={handleLoginAccount}>
-                Login to you account
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button variant="link" onClick={handleForgotPassword}>
-                forgot your password?
-              </Button>
-            </>
-          )}
-        </Modal.Footer>
-      </Modal>
+      {/* <Modal.Footer> */}
+      <div className="flex row justify-content-between px-3">
+        <div className="">
+          <span>don't have an account?</span>
+          <Button variant="link" onClick={() => handleMode("signup")}>
+            SignUp
+          </Button>
+        </div>
+        <div>
+          <Button variant="link" onClick={() => handleMode("forgot-passeword")}>
+            forgot your password?
+          </Button>
+        </div>
+      </div>
+      {/* </Modal.Footer> */}
     </>
   );
 };

@@ -6,6 +6,10 @@ const getProducts = (page) => {
   return axios.get(API_URL + `getproducts?page=${page}&perPage=6`);
 };
 
+const getAllProducts = () => {
+  return axios.get(API_URL + "getallproducts");
+};
+
 const addProduct = (id, name, description, category, price, quantity, link) => {
   return axios.post(API_URL + "addproduct", {
     id,
@@ -38,6 +42,7 @@ const ProductService = {
   getProductDetail,
   getProducts,
   updateProduct,
+  getAllProducts,
 };
 
 export default ProductService;

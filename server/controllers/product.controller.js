@@ -6,9 +6,10 @@ const Product = db.product;
 exports.getProducts = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const perPage = parseInt(req.query.perPage) || 8;
+    const perPage = parseInt(req.query.perPage) || 6;
     const skip = (page - 1) * perPage;
 
+    const total = await Product.find();
     const products = await Product.find().skip(skip).limit(perPage);
     const totalProducts = await Product.countDocuments();
     const maxPage = Math.ceil(totalProducts / perPage);
@@ -16,12 +17,23 @@ exports.getProducts = async (req, res) => {
     res.send({
       products,
       maxPage,
+      totalProducts,
+      total,
     });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+// exports.getAllProducts = async (req, res) => {
+//   try {
+//     const products = await Product.find();
+//     res.send({ products });
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
 
 exports.editProduct = async (req, res) => {
   try {

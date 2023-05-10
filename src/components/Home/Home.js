@@ -17,13 +17,14 @@ const Home = ({ showAdminBoard }) => {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
-  // const showAdminBoard = AuthService.isAdmin();
+  const [total, setTotal] = useState([]);
 
   useEffect(() => {
     ProductService.getProducts(page)
       .then((response) => {
         setProducts(response.data.products);
         setMaxPage(response.data.maxPage);
+        setTotal(response.data.total);
       })
       .catch((error) => {
         console.error(error);
@@ -31,19 +32,19 @@ const Home = ({ showAdminBoard }) => {
   }, [page]);
 
   const sortByCreatedAtAsc = () => {
-    const sortedProducts = [...products].sort(
-      (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+    const sortedProducts = [...total].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
     setProducts(sortedProducts);
   };
 
   const sortByPriceAsc = () => {
-    const sortedProducts = [...products].sort((a, b) => a.price - b.price);
+    const sortedProducts = [...total].sort((a, b) => a.price - b.price);
     setProducts(sortedProducts);
   };
 
   const sortByPriceDes = () => {
-    const sortedProducts = [...products].sort((a, b) => b.price - a.price);
+    const sortedProducts = [...total].sort((a, b) => b.price - a.price);
     setProducts(sortedProducts);
   };
 

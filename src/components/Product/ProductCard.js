@@ -19,17 +19,16 @@ const ProductCard = ({
   showAdminBoard,
 }) => {
   useEffect(() => {}, [cart]);
-  //   const showAdminBoard = AuthService.isAdmin();
   const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
   const cartQuantity =
-    cartItems?.filter((item) => item.id === product?._id)[0]?.quantity || 1;
+    cartItems?.filter((item) => item.id === product?._id)[0]?.quantity || 0;
 
   const handleAddToCart = (product) => {
     const productCart = {
       id: product?._id,
       name: product?.name,
       price: product?.price,
-      quantity: cartQuantity,
+      quantity: 1,
       link: product?.link,
     };
     addToCartAction(productCart);
@@ -59,29 +58,31 @@ const ProductCard = ({
           <Card.Title>{product.name}</Card.Title>
           <Card.Text>${product.price}</Card.Text>
           <Row>
-            <Button
-              variant="primary"
-              type="button"
-              onClick={() => handleAddToCart(product)}
-            >
-              Add to cart
-            </Button>
-          </Row>
-          <Row>
-            <CartQtyButton
-              product={product}
-              cartQuantity={cartQuantity}
-              handleUpdateBtn={handleUpdateBtn}
-            />
-          </Row>
-
-          {showAdminBoard && (
-            <Row>
+            {cartQuantity < 1 ? (
+              <Button
+                variant="primary"
+                type="button"
+                onClick={() => handleAddToCart(product)}
+              >
+                Add to cart
+              </Button>
+            ) : (
+              // </Row>
+              // <Row>
+              <CartQtyButton
+                product={product}
+                cartQuantity={cartQuantity}
+                handleUpdateBtn={handleUpdateBtn}
+              />
+              // </Row>
+            )}
+            {/* <Row> */}
+            {showAdminBoard && (
               <Button variant="light">
                 <Link to={`/editproduct/${product.id}`}>Edit product</Link>
               </Button>
-            </Row>
-          )}
+            )}
+          </Row>
         </Card.Body>
         <Card.Footer>
           <Link to={`/user/${product.id}`}>View Details</Link>

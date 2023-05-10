@@ -1,19 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProductService from "../../services/product.service";
-import { Button } from "react-bootstrap";
+import { Button, Row } from "react-bootstrap";
+import { Dropdown, DropdownButton } from "react-bootstrap";
+
+const categories = ["phone", "watch", "TV", "headphones", "Pad"];
 
 const CreateProduct = () => {
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
+  // const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
   const [link, setLink] = useState("");
 
   const [errorMessage, setErrorMessages] = useState([]);
+  const [category, setCategory] = useState("");
   const navigate = useNavigate();
+
+  // const handlePreview = () => {
+  //   setLink(document.getElementById("link").value);
+  // };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -77,13 +85,26 @@ const CreateProduct = () => {
           </div>
           <div className="form-group">
             <label htmlFor="category">Category</label>
-            <input
+            {/* <input
               type="text"
               className="form-control"
               id="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-            />
+            /> */}
+            <DropdownButton
+              id="dropdown-category"
+              title={category ? category : "Select category"}
+            >
+              {categories.map((category) => (
+                <Dropdown.Item
+                  key={category}
+                  onClick={() => setCategory(category)}
+                >
+                  {category}
+                </Dropdown.Item>
+              ))}
+            </DropdownButton>
           </div>
           <div className="form-group">
             <label htmlFor="price">Price</label>
@@ -114,7 +135,23 @@ const CreateProduct = () => {
               value={link}
               onChange={(e) => setLink(e.target.value)}
             />
+
+            {/* <div className="input-group-append">
+              <Button variant="link" onClick={handlePreview}>
+                Preview
+              </Button>
+            </div> */}
           </div>
+          <Row>
+            {link && (
+              <img
+                src={link}
+                alt="Product preview"
+                style={{ minWidth: "200px" }}
+              />
+            )}
+          </Row>
+
           <Button type="submit">Add Product</Button>
 
           {errorMessage.map((error, index) => (

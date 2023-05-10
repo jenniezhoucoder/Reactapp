@@ -25,6 +25,7 @@ import ShoppingCart from "./components/Cart/ShoppingCart";
 import TempCart from "./components/Cart/TempCart";
 import Footer from "./common/footer";
 import { useSelector } from "react-redux";
+import MyModal from "./components/Login/MyModal";
 
 const App = () => {
   const [showAdminBoard, setShowAdminBoard] = useState(false);
@@ -47,8 +48,8 @@ const App = () => {
   const cart = useSelector((state) => state.cartReducer);
   const { cartItems, total } = cart;
 
-  console.log(total);
-  console.log(cartItems);
+  // console.log(total);
+  // console.log(cartItems);
 
   const logOut = () => {
     AuthService.logout();
@@ -106,7 +107,7 @@ const App = () => {
                     <i className="bi bi-person"></i>
                   </Button>
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <Button
                     type="button"
                     variant="link"
@@ -116,7 +117,7 @@ const App = () => {
                   >
                     Register
                   </Button>
-                </li>
+                </li> */}
               </ul>
             </div>
           )}
@@ -140,12 +141,13 @@ const App = () => {
       </div>
 
       <div className="container mt-3">
-        <Login show={showLogin} onHide={() => setShowLogin(false)} />
+        {/* <Login show={showLogin} onHide={() => setShowLogin(false)} /> */}
+        <MyModal show={showLogin} onHide={() => setShowLogin(false)} />
       </div>
 
-      <div className="container mt-3">
+      {/* <div className="container mt-3">
         <Register show={showRegister} onHide={() => setShowRegister(false)} />
-      </div>
+      </div> */}
 
       <div className="container mt-3">
         <Routes>
